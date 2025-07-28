@@ -1,0 +1,54 @@
+/* Custom dark theme styles that don't rely on Tailwind's dark mode */
+
+.dark body {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.dark .bg-dark-900 {
+  background-color: #121212 !important;
+}
+
+.dark .bg-dark-800 {
+  background-color: #1F1F1F !important;
+}
+
+.dark .bg-dark-700 {
+  background-color: #2D2D2D !important;
+}
+
+.dark .text-yellow-500 {
+  color: #FACC15 !important;
+}
+
+.dark .border-dark-700 {
+  border-color: #2D2D2D !important;
+}
+
+.dark .hover\:bg-yellow-500\/10:hover {
+  background-color: rgba(250, 204, 21, 0.1) !important;
+}
+
+.dark .bg-yellow-500 {
+  background-color: #FACC15 !important;
+}
+
+.dark .text-gray-300 {
+  color: #D1D5DB !important;
+}
+
+.dark .text-gray-400 {
+  color: #9CA3AF !important;
+}
+
+.dark .text-black {
+  color: #000000 !important;
+}
+
+.dark .border-yellow-500 {
+  border-color: #FACC15 !important;
+}
+
+.dark .hover\:bg-yellow-600:hover {
+  background-color: #EAB308 !important;
+}
