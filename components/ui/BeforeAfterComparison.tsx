@@ -105,10 +105,10 @@ export default function BeforeAfterComparison({ userId }: BeforeAfterComparisonP
     <div className="py-6 px-2" style={{ backgroundColor: '#1B1B1B', border: '1px solid #404040', borderRadius: '8px' }}>
       <h2 className="text-lg font-semibold text-white mb-6 px-4">BEFORE & AFTER PHOTOS</h2>
       
-      <div className="grid grid-cols-2 gap-1">
+      <div className="grid grid-cols-2 gap-1 h-80">
         {/* Before Photo - Left Side */}
-        <div className="space-y-3">
-          <div className="relative aspect-[2/3] overflow-hidden group" style={{ backgroundColor: '#232323', borderRadius: '8px' }}>
+        <div className="flex flex-col h-full">
+          <div className="relative flex-1 overflow-hidden group" style={{ backgroundColor: '#232323', borderRadius: '8px' }}>
             {/* Before Label */}
             <div className="absolute top-2 left-2 right-2 z-10">
               <div className="px-3 py-1" style={{ backgroundColor: 'rgba(27, 27, 27, 0.8)', borderRadius: '8px' }}>
@@ -172,15 +172,15 @@ export default function BeforeAfterComparison({ userId }: BeforeAfterComparisonP
           
           {/* Photo Caption */}
           {photos.before && (
-            <p className="text-xs" style={{ color: '#979797' }}>
+            <p className="text-xs mt-2" style={{ color: '#979797' }}>
               Uploaded {formatDate(photos.before.taken_at)}
             </p>
           )}
         </div>
 
         {/* After Photo - Right Side */}
-        <div className="space-y-3">
-          <div className="relative aspect-[2/3] overflow-hidden group" style={{ backgroundColor: '#232323', borderRadius: '8px' }}>
+        <div className="flex flex-col h-full">
+          <div className="relative flex-1 overflow-hidden group" style={{ backgroundColor: '#232323', borderRadius: '8px' }}>
             {/* After Label */}
             <div className="absolute top-2 left-2 right-2 z-10">
               <div className="px-3 py-1" style={{ backgroundColor: 'rgba(27, 27, 27, 0.8)', borderRadius: '8px' }}>
@@ -218,7 +218,7 @@ export default function BeforeAfterComparison({ userId }: BeforeAfterComparisonP
           
           {/* Photo Caption */}
           {photos.after && (
-            <p className="text-xs" style={{ color: '#979797' }}>
+            <p className="text-xs mt-2" style={{ color: '#979797' }}>
               Uploaded From Workout {formatDate(photos.after.taken_at)}
             </p>
           )}

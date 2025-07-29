@@ -148,10 +148,10 @@ export default function ExercisesPage() {
         {isAdminUser && (
           <button
             onClick={handleAddExercise}
-            className="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 font-medium transition-colors flex items-center gap-2" style={{ borderRadius: '8px' }}
+            className="bg-yellow-400 hover:bg-yellow-500 text-black px-3 sm:px-4 py-2 font-medium transition-colors flex items-center gap-2 whitespace-nowrap" style={{ borderRadius: '8px' }}
           >
-            <Plus className="w-5 h-5" />
-            Add Exercise
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="text-sm sm:text-base">Add Exercise</span>
           </button>
         )}
       </div>

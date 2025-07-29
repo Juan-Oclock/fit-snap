@@ -99,20 +99,41 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen relative flex items-center justify-center p-4 overflow-hidden">
+      {/* Video Background */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover z-0"
+      >
+        <source src="/gym-dumbbells-video.mp4" type="video/mp4" />
+        {/* Fallback background */}
+        <div className="absolute inset-0 bg-gray-900" />
+      </video>
+      
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 bg-black bg-opacity-75 z-10" />
+      <div className="max-w-md w-full space-y-8 relative z-20">
         {/* Logo */}
         <div className="text-center">
           <div className="flex items-center justify-center mb-6">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-xl">F</span>
+            <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#FFFC74' }}>
+              <span className="text-black font-bold text-xl">F</span>
             </div>
             <span className="ml-3 text-2xl font-bold text-white">FitSnap</span>
           </div>
         </div>
 
-        {/* Auth Form */}
-        <div className="bg-gray-800 rounded-lg shadow-xl p-8">
+        {/* Auth Form - Force 35% transparency */}
+        <div 
+          className="rounded-lg shadow-xl p-8 backdrop-blur-sm" 
+          style={{ 
+            backgroundColor: 'rgba(21, 21, 21, 0.35)',
+            backgroundBlendMode: 'normal'
+          }}
+        >
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-white">
               {isSignUp ? 'Create your account' : 'Log in to your account'}
@@ -147,7 +168,8 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                className="w-full px-3 py-3 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                style={{ backgroundColor: 'rgba(55, 65, 81, 0.4)' }}
                 placeholder="you@example.com"
               />
             </div>
@@ -165,7 +187,8 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-3 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent pr-10"
+                  className="w-full px-3 py-3 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent pr-10"
+                  style={{ backgroundColor: 'rgba(55, 65, 81, 0.4)' }}
                   placeholder={isSignUp ? 'Create a password' : 'Enter your password'}
                   minLength={6}
                 />
@@ -240,9 +263,19 @@ export default function LoginPage() {
             </button>
           </div> */}
 
+          {/* Return to Homepage Link */}
+          <div className="mt-6 text-center">
+            <Link
+              href="/"
+              className="text-sm text-gray-400 hover:text-white transition-colors"
+            >
+              ← Return to Homepage
+            </Link>
+          </div>
+
           {/* Development Debug Link */}
           {process.env.NODE_ENV === 'development' && (
-            <div className="mt-6 text-center">
+            <div className="mt-4 text-center">
               <Link
                 href="/debug-auth"
                 className="text-xs text-gray-500 hover:text-gray-400 underline"
