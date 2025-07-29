@@ -50,34 +50,33 @@ export default function CommunityWorkoutCard({
 
   const handleLikeToggle = async () => {
     if (!currentUserId || isLoading) return;
-
+    // --- Optimistic UI ---
+    const prevLiked = isLiked;
+    const prevCount = likeCount;
+    setIsLiked(!isLiked);
+    setLikeCount(isLiked ? likeCount - 1 : likeCount + 1);
     setIsLoading(true);
     try {
-      if (isLiked) {
+      if (prevLiked) {
         await removeReaction(workout.id, currentUserId);
-        setIsLiked(false);
-        setLikeCount(prev => prev - 1);
       } else {
         await addReaction(workout.id, currentUserId, 'like');
-        setIsLiked(true);
-        setLikeCount(prev => prev + 1);
       }
-
       if (onReactionUpdate) {
-        onReactionUpdate(workout.id, isLiked ? likeCount - 1 : likeCount + 1);
+        onReactionUpdate(workout.id, prevLiked ? prevCount - 1 : prevCount + 1);
       }
     } catch (error) {
+      setIsLiked(prevLiked);
+      setLikeCount(prevCount);
       console.error('Error toggling like:', error);
-      setIsLiked(initialIsLiked);
-      setLikeCount(initialLikeCount);
     } finally {
       setIsLoading(false);
     }
   };
 
+
   const handleCommentsToggle = async () => {
     if (!showComments && comments.length === 0) {
-      // Load comments when first opening
       setLoadingComments(true);
       try {
         const fetchedComments = await getWorkoutComments(workout.id);
@@ -88,41 +87,50 @@ export default function CommunityWorkoutCard({
         setLoadingComments(false);
       }
     }
+    // Comments are now cached after first load
     setShowComments(!showComments);
   };
 
+
   const handleAddComment = async () => {
     if (!currentUserId || !newComment.trim() || addingComment) return;
-
+    // --- Optimistic UI ---
+    const optimisticComment = {
+      id: 'optimistic-' + Date.now(),
+      user_id: currentUserId,
+      content: newComment.trim(),
+      created_at: new Date().toISOString(),
+      profiles: { full_name: 'You', username: 'you' },
+    };
+    setComments(prev => [...prev, optimisticComment as any]);
+    setNewComment('');
     setAddingComment(true);
     try {
-      const comment = await addComment(workout.id, currentUserId, newComment.trim());
-      setComments(prev => [...prev, comment]);
-      setNewComment('');
-      
+      const comment = await addComment(workout.id, currentUserId, optimisticComment.content);
+      setComments(prev => prev.map(c => c.id === optimisticComment.id ? comment : c));
       // Update the comment count in the parent component
       if (onCommentAdd) {
         const newCount = (workout._count?.community_comments || 0) + 1;
         onCommentAdd(workout.id, newCount);
       }
     } catch (error) {
+      setComments(prev => prev.filter(c => c.id !== optimisticComment.id));
       console.error('Error adding comment:', error);
     } finally {
       setAddingComment(false);
     }
   };
 
+
+  // Cache details after first load
   const fetchWorkoutDetails = async () => {
     if (loadingDetails || detailedExercises.length > 0) return;
-    
     setLoadingDetails(true);
     try {
       const response = await fetch(`/api/community-workout-details/${workout.id}`);
       const data = await response.json();
-      
       if (response.ok) {
         setDetailedExercises(data.exercises || []);
-        console.log(`Fetched ${data.exercises?.length || 0} exercises with ${data.totalSets || 0} total sets`);
       } else {
         console.error('Failed to fetch workout details:', data.error);
       }
@@ -132,6 +140,7 @@ export default function CommunityWorkoutCard({
       setLoadingDetails(false);
     }
   };
+
 
   const handleToggleDetails = async () => {
     if (!showDetails) {

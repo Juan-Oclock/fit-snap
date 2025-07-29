@@ -124,7 +124,7 @@ export default function CommunityPage() {
   }
 
   return (
-    <div className="container-app space-y-6">
+    <div className="container-app space-y-6" style={{ overflowX: 'hidden' }}>
       {/* Header */}
       <div className="flex justify-between items-center">
         <h1 className="text-heading" style={{ fontSize: '24px', textTransform: 'uppercase', color: '#FFFFFF' }}>COMMUNITY</h1>
@@ -154,7 +154,7 @@ export default function CommunityPage() {
       />
 
       {/* Community Feed */}
-      <div className="space-y-6">
+      <div className="space-y-6 w-full max-w-full overflow-x-hidden">
         {workouts.length === 0 ? (
           <div className="p-12 text-center" style={{ backgroundColor: '#1B1B1B', border: '1px solid #404040', borderRadius: '8px' }}>
             <Users className="w-12 h-12 mx-auto mb-4" style={{ color: '#979797' }} />
