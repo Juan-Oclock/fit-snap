@@ -227,7 +227,7 @@ export default function BeforeAfterComparison({ userId }: BeforeAfterComparisonP
 
       {/* Progress message */}
       {photos.before && photos.after && (
-        <div className="mt-6">
+        <div className="mt-8 pt-4">
           <p className="text-center" style={{ fontSize: '14px', color: '#979797' }}>
             Great job tracking your progress! Keep up the amazing work!
           </p>

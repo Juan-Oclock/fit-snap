@@ -35,7 +35,7 @@ export default function HomePage() {
               <Link href="/login" className="px-4 py-2 hover:text-white transition-colors" style={{ color: '#979797' }}>
                 Login
               </Link>
-              <Link href="/register" className="px-4 py-2 text-black rounded hover:opacity-90 transition-colors" style={{ backgroundColor: '#FFFC74' }}>
+              <Link href="/login" className="px-4 py-2 text-black rounded hover:opacity-90 transition-colors" style={{ backgroundColor: '#FFFC74' }}>
                 Sign Up
               </Link>
             </div>
@@ -60,7 +60,7 @@ export default function HomePage() {
             An all-in-one fitness tracking app that helps you monitor your workouts, track your progress, and stay motivated with a supportive community.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/register" className="px-8 py-3 text-black rounded font-medium hover:opacity-90 transition-colors" style={{ backgroundColor: '#FFFC74' }}>
+            <Link href="/login" className="px-8 py-3 text-black rounded font-medium hover:opacity-90 transition-colors" style={{ backgroundColor: '#FFFC74' }}>
               Get Started
             </Link>
             <button className="px-8 py-3 text-white rounded hover:opacity-80 transition-colors" style={{ border: '1px solid #FFFC74', color: '#FFFC74' }}>
