@@ -134,11 +134,11 @@ export default function HomePage() {
                 Take control of your fitness with comprehensive workout tracking, progress monitoring, and personal records. FitSnap helps you stay motivated with detailed analytics, photo comparisons, and a supportive community of fitness enthusiasts.
               </p>
             </div>
-            <div className="rounded-lg aspect-[4/3] overflow-hidden">
+            <div className="rounded-lg aspect-[4/3] lg:aspect-[4/3] my-8 md:my-0">
               <img 
                 src="/fitsnap iphone mockup.png" 
                 alt="FitSnap app displayed on iPhone mockup"
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain scale-125 md:scale-100 my-4 md:my-0"
               />
             </div>
           </div>

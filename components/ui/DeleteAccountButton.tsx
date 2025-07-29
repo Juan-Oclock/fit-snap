@@ -86,8 +86,8 @@ export default function DeleteAccountButton({ user }: DeleteAccountButtonProps) 
       <h2 className="text-xl font-semibold text-white mb-6">Account Actions</h2>
       
       <div className="space-y-4">
-        {/* Sign Out Button */}
-        <div className="flex items-center justify-between p-4" style={{ backgroundColor: '#232323', border: '1px solid #404040', borderRadius: '8px' }}>
+        {/* Sign Out Button - Hidden for now */}
+        {/* <div className="flex items-center justify-between p-4" style={{ backgroundColor: '#232323', border: '1px solid #404040', borderRadius: '8px' }}>
           <div>
             <h3 className="text-sm font-medium text-white">Sign Out</h3>
             <p className="text-xs" style={{ color: '#979797' }}>Sign out of your account on this device</p>
@@ -109,7 +109,7 @@ export default function DeleteAccountButton({ user }: DeleteAccountButtonProps) 
               'Sign Out'
             )}
           </button>
-        </div>
+        </div> */}
 
         {/* Delete Account Section */}
         <div className="p-4" style={{ backgroundColor: '#1B1B1B', border: '1px solid #ef4444', borderRadius: '8px' }}>

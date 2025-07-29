@@ -130,7 +130,7 @@ export default function LoginPage() {
         <div 
           className="rounded-lg shadow-xl p-8 backdrop-blur-sm" 
           style={{ 
-            backgroundColor: 'rgba(21, 21, 21, 0.35)',
+            backgroundColor: 'rgba(21, 21, 21, 0.45)',
             backgroundBlendMode: 'normal'
           }}
         >

@@ -6,6 +6,7 @@ import ProgressCircle from '@/components/ui/ProgressCircle';
 import { getRemainingDaysInMonth, getCurrentMonthName } from '@/lib/date-utils';
 import DashboardCalendar from '@/components/ui/DashboardCalendar';
 import BeforeAfterComparison from '@/components/ui/BeforeAfterComparison';
+import OnboardingFlow from '@/components/ui/OnboardingFlow';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -20,6 +21,7 @@ import {
   formatDate
 } from '@/lib/dashboard';
 import { getUserProfile } from '@/lib/settings';
+import { checkOnboardingStatus, completeOnboarding, shouldShowOnboarding, OnboardingStatus } from '@/lib/onboarding';
 import { Workout, WorkoutWithExercises, UserProfile } from '@/types';
 
 interface PersonalRecord {
@@ -44,6 +46,10 @@ export default function DashboardPage() {
 
   const [hasGoal, setHasGoal] = useState(true);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  
+  // Onboarding state
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [onboardingStatus, setOnboardingStatus] = useState<OnboardingStatus | null>(null);
   
   // Helper functions for workout statistics
   const getWorkoutStats = (workout: WorkoutWithExercises) => {
@@ -100,7 +106,8 @@ export default function DashboardPage() {
           prs,
           workouts,
           goalExists,
-          profile
+          profile,
+          onboardingStatusData
         ] = await Promise.all([
           getUserGoal(user.id),
           getMonthlyWorkoutCount(user.id),
@@ -108,7 +115,8 @@ export default function DashboardPage() {
           getPersonalRecords(user.id),
           getRecentWorkouts(user.id),
           hasUserSetGoal(user.id),
-          getUserProfile(user.id)
+          getUserProfile(user.id),
+          checkOnboardingStatus(user.id)
         ]);
         
         // console.log('📊 Dashboard data fetched:', {
@@ -130,6 +138,10 @@ export default function DashboardPage() {
 
         setHasGoal(goalExists);
         setUserProfile(profile);
+        
+        // Check if onboarding should be shown
+        setOnboardingStatus(onboardingStatusData);
+        setShowOnboarding(shouldShowOnboarding(onboardingStatusData));
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       } finally {
@@ -141,6 +153,26 @@ export default function DashboardPage() {
       fetchDashboardData();
     }
   }, [user?.id]);
+  
+  // Onboarding handlers
+  const handleOnboardingComplete = async () => {
+    if (user?.id) {
+      await completeOnboarding(user.id);
+      setShowOnboarding(false);
+      // Refresh dashboard data to reflect any changes
+      if (user?.id) {
+        const newStatus = await checkOnboardingStatus(user.id);
+        setOnboardingStatus(newStatus);
+      }
+    }
+  };
+  
+  const handleOnboardingSkip = async () => {
+    if (user?.id) {
+      await completeOnboarding(user.id);
+      setShowOnboarding(false);
+    }
+  };
   
   if (loading) {
     return (
@@ -172,7 +204,17 @@ export default function DashboardPage() {
   }
   
   return (
-    <div className="container-app space-y-6">
+    <>
+      {/* Onboarding Flow */}
+      {showOnboarding && user && (
+        <OnboardingFlow
+          user={user}
+          onComplete={handleOnboardingComplete}
+          onSkip={handleOnboardingSkip}
+        />
+      )}
+      
+      <div className="container-app space-y-6">
       {/* Welcome Header - Top Left */}
       <div className="flex justify-start">
         <div className="text-left">
@@ -399,5 +441,6 @@ export default function DashboardPage() {
       )}
       
     </div>
+    </>
   );
 }

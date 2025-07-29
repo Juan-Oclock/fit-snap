@@ -3,8 +3,8 @@
 import { useUser } from '@/hooks/useUser';
 import GoalProgress from '@/components/ui/GoalProgress';
 import CalendarView from '@/components/ui/CalendarView';
-import BeforeAfterComparison from '@/components/ui/BeforeAfterComparison';
-import PRMetrics from '@/components/ui/PRMetrics';
+// import BeforeAfterComparison from '@/components/ui/BeforeAfterComparison';
+// import PRMetrics from '@/components/ui/PRMetrics';
 import WorkoutFrequency from '@/components/ui/WorkoutFrequency';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
@@ -51,11 +51,11 @@ export default function ProgressPage() {
         </div>
 
         {/* Middle Row - Before/After Photos */}
-        <BeforeAfterComparison userId={user.id} />
+        {/* <BeforeAfterComparison userId={user.id} /> */}
 
         {/* Bottom Row - PRs and Frequency */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <PRMetrics userId={user.id} />
+        <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
+          {/* <PRMetrics userId={user.id} /> */}
           <WorkoutFrequency userId={user.id} />
         </div>
       </div>
