@@ -4,14 +4,24 @@
 
 :root {
   --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 18, 18, 18;
-  --background-end-rgb: 18, 18, 18;
+  --background-start-rgb: 21, 21, 21;
+  --background-end-rgb: 21, 21, 21;
+  
+  /* Custom CSS variables for the new theme */
+  --primary: #FFFC74;
+  --background: #151515;
+  --card-bg: #1A1A1A;
+  --border: #2A2A2A;
+  --text-primary: #FFFFFF;
+  --text-secondary: #979797;
+  --text-tertiary: #5E5E5E;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-start-rgb));
   min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 @layer base {
@@ -20,24 +30,103 @@ body {
   }
   
   body {
-    @apply dark:bg-dark-900 font-sans text-gray-50;
+    @apply bg-dark font-sans text-text-primary;
   }
 }
 
 @layer components {
+  /* Button Components */
   .btn-primary {
-    @apply bg-primary text-black font-medium py-2 px-4 rounded-md hover:bg-yellow-400 transition-colors;
+    @apply bg-primary text-dark font-semibold py-3 px-6 rounded-lg hover:bg-primary-600 transition-all duration-200 shadow-sm;
   }
   
   .btn-secondary {
-    @apply bg-dark-700 text-gray-100 font-medium py-2 px-4 rounded-md hover:bg-dark-600 transition-colors;
+    @apply bg-ui-card border border-ui-border text-text-primary font-medium py-3 px-6 rounded-lg hover:bg-ui-hover transition-all duration-200;
   }
   
+  .btn-ghost {
+    @apply text-text-secondary hover:text-text-primary hover:bg-ui-hover py-2 px-4 rounded-lg transition-all duration-200;
+  }
+  
+  /* Input Components */
   .input-field {
-    @apply bg-dark-800 border border-dark-600 rounded-md px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-primary;
+    @apply bg-ui-card border border-ui-border rounded-lg px-4 py-3 w-full text-text-primary placeholder-text-tertiary focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200;
   }
   
+  /* Card Components */
   .card {
-    @apply bg-dark-800 rounded-lg p-5 shadow-md;
+    @apply bg-ui-card rounded-xl p-6 border border-ui-border shadow-sm;
+  }
+  
+  .card-compact {
+    @apply bg-ui-card rounded-lg p-4 border border-ui-border;
+  }
+  
+  /* Progress Components */
+  .progress-ring {
+    @apply transform -rotate-90;
+  }
+  
+  .progress-circle {
+    @apply fill-none transition-all duration-300;
+  }
+  
+  /* Typography */
+  .heading-xl {
+    @apply text-4xl font-bold text-text-primary;
+  }
+  
+  .heading-lg {
+    @apply text-2xl font-semibold text-text-primary;
+  }
+  
+  .heading-md {
+    @apply text-xl font-medium text-text-primary;
+  }
+  
+  .text-body {
+    @apply text-base text-text-secondary;
+  }
+  
+  .text-caption {
+    @apply text-sm text-text-tertiary;
+  }
+  
+  /* Layout helpers */
+  .container-app {
+    @apply max-w-7xl mx-auto;
+  }
+  
+  /* Design System Colors */
+  .text-highlight {
+    color: #FFFC74;
+  }
+  
+  .text-heading {
+    color: #FFFFFF;
+  }
+  
+  .text-subheading {
+    color: #979797;
+  }
+  
+  .text-paragraph {
+    color: #5E5E5E;
+  }
+  
+  .bg-app {
+    background-color: #151515;
+  }
+  
+  .border-app {
+    border-color: #5E5E5E;
+  }
+  
+  .bg-card {
+    background-color: #1B1B1B;
+  }
+  
+  .grid-dashboard {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
   }
 }

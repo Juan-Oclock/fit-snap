@@ -41,8 +41,8 @@ export default function GoalProgress({ userId }: GoalProgressProps) {
 
   if (loading) {
     return (
-      <div className="card">
-        <h2 className="text-xl font-semibold mb-4">Monthly Goal Progress</h2>
+      <div className="p-6" style={{ backgroundColor: '#1B1B1B', border: '1px solid #404040', borderRadius: '8px' }}>
+        <h2 className="text-xl font-semibold mb-4 text-white">Monthly Goal Progress</h2>
         <div className="flex justify-center py-8">
           <LoadingSpinner />
         </div>
@@ -52,9 +52,9 @@ export default function GoalProgress({ userId }: GoalProgressProps) {
 
   if (!progress) {
     return (
-      <div className="card">
-        <h2 className="text-xl font-semibold mb-4">Monthly Goal Progress</h2>
-        <p className="text-gray-400">Unable to load progress data</p>
+      <div className="p-6" style={{ backgroundColor: '#1B1B1B', border: '1px solid #404040', borderRadius: '8px' }}>
+        <h2 className="text-xl font-semibold mb-4 text-white">Monthly Goal Progress</h2>
+        <p style={{ color: '#979797' }}>Unable to load progress data</p>
       </div>
     );
   }
@@ -63,64 +63,63 @@ export default function GoalProgress({ userId }: GoalProgressProps) {
   const remainingSessions = Math.max(0, progress.target - progress.current);
 
   return (
-    <div className="card">
+    <div className="p-6" style={{ backgroundColor: '#1B1B1B', border: '1px solid #404040', borderRadius: '8px' }}>
       <div className="flex justify-between items-start mb-6">
-        <h2 className="text-xl font-semibold">{currentMonth} Goal Progress</h2>
+        <h2 className="text-xl font-semibold text-white">{currentMonth} Goal Progress</h2>
         <div className="text-right">
-          <p className="text-xs text-gray-400">{remainingDays} days left</p>
+          <p className="text-xs" style={{ color: '#979797' }}>{remainingDays} days left</p>
         </div>
       </div>
       
       <div className="flex flex-col items-center space-y-6">
-        <div className="relative">
+        <div className="text-center space-y-3">
           <ProgressCircle
             current={progress.current}
             target={progress.target}
             size={140}
             strokeWidth={10}
+            showPercentage={true}
+            showValues={false}
           />
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-2xl font-bold text-primary">
-              {progress.current}
-            </span>
-            <span className="text-sm text-gray-400">
-              of {progress.target}
+          <div className="text-center">
+            <span className="text-lg font-medium" style={{ color: '#FFFC74' }}>
+              {progress.current} of {progress.target}
             </span>
           </div>
         </div>
 
         <div className="text-center space-y-2">
-          <p className="text-lg font-medium">
+          <p className="text-lg font-medium text-white">
             {progress.current} of {progress.target} sessions completed
           </p>
           
           {isGoalMet ? (
             <div className="space-y-1">
-              <p className="text-primary font-medium">🎉 Goal achieved!</p>
-              <p className="text-sm text-gray-400">
+              <p className="font-medium" style={{ color: '#FFFC74' }}>🎉 Goal achieved!</p>
+              <p className="text-sm" style={{ color: '#979797' }}>
                 Great job staying consistent this month!
               </p>
               {remainingDays > 0 && (
-                <p className="text-xs text-green-400">
+                <p className="text-xs" style={{ color: '#22c55e' }}>
                   Keep going! {remainingDays} days left to exceed your goal
                 </p>
               )}
             </div>
           ) : (
             <div className="space-y-1">
-              <p className="text-gray-300">
+              <p className="text-white">
                 {remainingSessions} session{remainingSessions !== 1 ? 's' : ''} remaining
               </p>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm" style={{ color: '#979797' }}>
                 {Math.round(progress.percentage)}% complete
               </p>
               {remainingDays > 0 && remainingSessions > remainingDays && (
-                <p className="text-xs text-yellow-400">
+                <p className="text-xs" style={{ color: '#FFFC74' }}>
                   ⚠️ Need {(remainingSessions / remainingDays).toFixed(1)} sessions/day to reach goal
                 </p>
               )}
               {remainingDays > 0 && remainingSessions <= remainingDays && remainingSessions > 0 && (
-                <p className="text-xs text-green-400">
+                <p className="text-xs" style={{ color: '#22c55e' }}>
                   ✅ On track! About 1 session every {Math.ceil(remainingDays / remainingSessions)} days
                 </p>
               )}
@@ -130,14 +129,14 @@ export default function GoalProgress({ userId }: GoalProgressProps) {
 
         {/* Progress bar for mobile/alternative view */}
         <div className="w-full max-w-xs">
-          <div className="flex justify-between text-sm text-gray-400 mb-2">
+          <div className="flex justify-between text-sm mb-2" style={{ color: '#979797' }}>
             <span>Progress</span>
             <span>{Math.round(progress.percentage)}%</span>
           </div>
-          <div className="w-full bg-gray-700 rounded-full h-2">
+          <div className="w-full h-2 rounded-full" style={{ backgroundColor: '#404040' }}>
             <div
-              className="bg-primary h-2 rounded-full transition-all duration-300"
-              style={{ width: `${Math.min(progress.percentage, 100)}%` }}
+              className="h-2 rounded-full transition-all duration-300"
+              style={{ width: `${Math.min(progress.percentage, 100)}%`, backgroundColor: '#FFFC74' }}
             />
           </div>
         </div>

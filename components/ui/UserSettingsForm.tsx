@@ -128,8 +128,8 @@ export default function UserSettingsForm({
   }, [message]);
 
   return (
-    <div className="bg-dark-800 rounded-lg p-6 border border-dark-600">
-      <h2 className="text-xl font-semibold text-gray-100 mb-6">Workout Preferences</h2>
+    <div className="p-6" style={{ backgroundColor: '#1B1B1B', border: '1px solid #404040', borderRadius: '8px' }}>
+      <h2 className="text-xl font-semibold text-white mb-6">Workout Preferences</h2>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Rest Timer Setting */}
@@ -161,8 +161,8 @@ export default function UserSettingsForm({
             formatValue={formatGoal}
           />
           {remainingDays <= 7 && (
-            <div className="mt-2 p-2 bg-yellow-900/20 border border-yellow-500/30 rounded-lg">
-              <p className="text-yellow-400 text-xs">
+            <div className="mt-2 p-2" style={{ backgroundColor: '#1B1B1B', border: '1px solid #FFFC74', borderRadius: '8px' }}>
+              <p className="text-xs" style={{ color: '#FFFC74' }}>
                 ⚠️ Limited time left! You can set a maximum of {remainingDays} workout{remainingDays !== 1 ? 's' : ''} for the remaining days.
               </p>
             </div>
@@ -193,11 +193,12 @@ export default function UserSettingsForm({
 
         {/* Message Display */}
         {message && (
-          <div className={`p-3 rounded-lg text-sm ${
-            message.type === 'success' 
-              ? 'bg-green-900 border border-green-700 text-green-200' 
-              : 'bg-red-900 border border-red-700 text-red-200'
-          }`}>
+          <div className="p-3 text-sm" style={{
+            backgroundColor: '#1B1B1B',
+            border: `1px solid ${message.type === 'success' ? '#22c55e' : '#ef4444'}`,
+            borderRadius: '8px',
+            color: message.type === 'success' ? '#22c55e' : '#ef4444'
+          }}>
             {message.text}
           </div>
         )}
@@ -206,7 +207,10 @@ export default function UserSettingsForm({
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-primary hover:bg-primary-dark text-dark-900 font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+          className="w-full font-medium py-2 px-4 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+          style={{ backgroundColor: isLoading ? '#5E5E5E' : '#FFFC74', color: '#000000', borderRadius: '8px' }}
+          onMouseEnter={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#fef9c3')}
+          onMouseLeave={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#FFFC74')}
         >
           {isLoading ? (
             <>

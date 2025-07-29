@@ -41,8 +41,8 @@ export default function PRMetrics({ userId }: PRMetricsProps) {
 
   if (loading) {
     return (
-      <div className="card">
-        <h2 className="text-xl font-semibold mb-4">Personal Records</h2>
+      <div className="p-6" style={{ backgroundColor: '#1B1B1B', border: '1px solid #404040', borderRadius: '8px' }}>
+        <h2 className="text-xl font-semibold mb-4 text-white">PERSONAL RECORDS</h2>
         <div className="flex justify-center py-8">
           <LoadingSpinner />
         </div>
@@ -53,16 +53,19 @@ export default function PRMetrics({ userId }: PRMetricsProps) {
   const displayedRecords = showAll ? records : records.slice(0, 3);
 
   return (
-    <div className="card">
+    <div className="p-6" style={{ backgroundColor: '#1B1B1B', border: '1px solid #404040', borderRadius: '8px' }}>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold flex items-center gap-2">
-          <Trophy className="w-5 h-5 text-primary" />
-          Personal Records
+        <h2 className="text-xl font-semibold flex items-center gap-2 text-white">
+          <Trophy className="w-5 h-5" style={{ color: '#FFFC74' }} />
+          PERSONAL RECORDS
         </h2>
         {records.length > 3 && (
           <button
             onClick={() => setShowAll(!showAll)}
-            className="text-primary hover:text-yellow-400 text-sm font-medium transition-colors"
+            className="text-sm font-medium transition-colors"
+            style={{ color: '#FFFC74' }}
+            onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'}
+            onMouseLeave={(e) => e.currentTarget.style.color = '#FFFC74'}
           >
             {showAll ? 'Show Less' : 'View All'}
           </button>
@@ -71,9 +74,9 @@ export default function PRMetrics({ userId }: PRMetricsProps) {
 
       {records.length === 0 ? (
         <div className="text-center py-8">
-          <Trophy className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-          <p className="text-gray-400 mb-2">No personal records yet</p>
-          <p className="text-sm text-gray-500">
+          <Trophy className="w-12 h-12 mx-auto mb-3" style={{ color: '#404040' }} />
+          <p className="mb-2" style={{ color: '#979797' }}>No personal records yet</p>
+          <p className="text-sm" style={{ color: '#979797' }}>
             Complete workouts to start tracking your PRs!
           </p>
         </div>
@@ -82,11 +85,14 @@ export default function PRMetrics({ userId }: PRMetricsProps) {
           {displayedRecords.map((record, index) => (
             <div
               key={record.id}
-              className="flex items-center justify-between p-4 bg-gray-800 rounded-lg border border-gray-700 hover:border-gray-600 transition-colors"
+              className="flex items-center justify-between p-4 transition-colors"
+              style={{ backgroundColor: '#232323', border: '1px solid #404040', borderRadius: '8px' }}
+              onMouseEnter={(e) => e.currentTarget.style.borderColor = '#FFFC74'}
+              onMouseLeave={(e) => e.currentTarget.style.borderColor = '#404040'}
             >
               <div className="flex items-center gap-4">
-                <div className="flex items-center justify-center w-8 h-8 bg-primary bg-opacity-20 rounded-full">
-                  <span className="text-primary font-bold text-sm">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full" style={{ backgroundColor: 'rgba(255, 252, 116, 0.2)' }}>
+                  <span className="font-bold text-sm" style={{ color: '#FFFC74' }}>
                     #{index + 1}
                   </span>
                 </div>
@@ -95,7 +101,7 @@ export default function PRMetrics({ userId }: PRMetricsProps) {
                   <h3 className="font-semibold text-white">
                     {record.exercise_name}
                   </h3>
-                  <div className="flex items-center gap-3 text-sm text-gray-400 mt-1">
+                  <div className="flex items-center gap-3 text-sm mt-1" style={{ color: '#979797' }}>
                     <span className="flex items-center gap-1">
                       <TrendingUp className="w-3 h-3" />
                       {record.weight}kg × {record.reps} rep{record.reps !== 1 ? 's' : ''}
@@ -109,10 +115,10 @@ export default function PRMetrics({ userId }: PRMetricsProps) {
               </div>
 
               <div className="text-right">
-                <div className="text-lg font-bold text-primary">
+                <div className="text-lg font-bold" style={{ color: '#FFFC74' }}>
                   {record.weight}kg
                 </div>
-                <div className="text-xs text-gray-400">
+                <div className="text-xs" style={{ color: '#979797' }}>
                   {record.reps} rep{record.reps !== 1 ? 's' : ''}
                 </div>
               </div>

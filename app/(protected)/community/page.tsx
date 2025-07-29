@@ -86,15 +86,15 @@ export default function CommunityPage() {
 
   if (loading) {
     return (
-      <div className="space-y-6">
+      <div className="container-app space-y-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-white">Community</h1>
+          <h1 className="text-heading" style={{ fontSize: '24px', textTransform: 'uppercase', color: '#FFFFFF' }}>COMMUNITY</h1>
         </div>
         
         <div className="flex items-center justify-center py-12">
           <div className="text-center">
-            <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-4" />
-            <p className="text-gray-400">Loading community posts...</p>
+            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" style={{ color: '#FFFC74' }} />
+            <p style={{ color: '#979797' }}>Loading community posts...</p>
           </div>
         </div>
       </div>
@@ -103,16 +103,18 @@ export default function CommunityPage() {
 
   if (error) {
     return (
-      <div className="space-y-6">
+      <div className="container-app space-y-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-white">Community</h1>
+          <h1 className="text-heading" style={{ fontSize: '24px', textTransform: 'uppercase', color: '#FFFFFF' }}>COMMUNITY</h1>
         </div>
         
-        <div className="bg-red-900/20 border border-red-700 rounded-lg p-6 text-center">
-          <p className="text-red-400 mb-4">{error}</p>
+        <div className="p-6 text-center" style={{ backgroundColor: 'rgba(153, 27, 27, 0.2)', border: '1px solid #dc2626', borderRadius: '8px' }}>
+          <p className="mb-4" style={{ color: '#fca5a5' }}>{error}</p>
           <button 
             onClick={loadCommunityData}
-            className="btn-primary"
+            className="px-4 py-2 text-black transition-colors" style={{ backgroundColor: '#FFFC74', borderRadius: '8px' }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#fef9c3'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#FFFC74'}
           >
             Try Again
           </button>
@@ -122,24 +124,23 @@ export default function CommunityPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="container-app space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-white">Community</h1>
-        <div className="flex items-center gap-4 mb-6">
-          <div className="flex items-center gap-2 text-gray-600">
+        <h1 className="text-heading" style={{ fontSize: '24px', textTransform: 'uppercase', color: '#FFFFFF' }}>COMMUNITY</h1>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2" style={{ color: '#979797' }}>
             <Users className="w-5 h-5" />
             <span>{onlineCount} online</span>
           </div>
-          <div className="flex items-center gap-2 text-gray-600">
+          <div className="flex items-center gap-2" style={{ color: '#979797' }}>
             <MessageSquare className="w-5 h-5" />
-            <span>{workouts.length} workouts</span>
+            <span>{workouts.length} posts</span>
           </div>
-          <div className="flex items-center gap-2 text-gray-600">
+          <div className="flex items-center gap-2" style={{ color: '#979797' }}>
             <TrendingUp className="w-5 h-5" />
             <span>Community</span>
           </div>
-
         </div>
       </div>
 
@@ -155,13 +156,13 @@ export default function CommunityPage() {
       {/* Community Feed */}
       <div className="space-y-6">
         {workouts.length === 0 ? (
-          <div className="bg-dark-800 border border-dark-700 rounded-lg p-12 text-center">
-            <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+          <div className="p-12 text-center" style={{ backgroundColor: '#1B1B1B', border: '1px solid #404040', borderRadius: '8px' }}>
+            <Users className="w-12 h-12 mx-auto mb-4" style={{ color: '#979797' }} />
             <h3 className="text-lg font-medium text-white mb-2">No community posts yet</h3>
-            <p className="text-gray-400 mb-6">
+            <p className="mb-6" style={{ color: '#979797' }}>
               Be the first to share your workout with the community!
             </p>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm" style={{ color: '#5E5E5E' }}>
               Complete a workout and toggle "Share to community" to get started.
             </p>
           </div>
@@ -183,11 +184,13 @@ export default function CommunityPage() {
                 <button
                   onClick={loadMoreWorkouts}
                   disabled={loadingMore}
-                  className="btn-secondary disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-2 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed" style={{ backgroundColor: '#232323', border: '1px solid #404040', borderRadius: '8px' }}
+                  onMouseEnter={(e) => !loadingMore && (e.currentTarget.style.backgroundColor = '#2a2a2a')}
+                  onMouseLeave={(e) => !loadingMore && (e.currentTarget.style.backgroundColor = '#232323')}
                 >
                   {loadingMore ? (
                     <>
-                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" style={{ color: '#FFFC74' }} />
                       Loading...
                     </>
                   ) : (

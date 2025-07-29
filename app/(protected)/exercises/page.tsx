@@ -137,18 +137,18 @@ export default function ExercisesPage() {
   const hasActiveFilters = searchQuery || selectedCategory || selectedMuscleGroup;
 
   return (
-    <div className="space-y-6">
+    <div className="container-app space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white">Exercise Library</h1>
-          <p className="text-gray-400 mt-1">
+          <h1 className="text-heading font-semibold mb-1" style={{ fontSize: '24px' }}>EXERCISE LIBRARY</h1>
+          <p className="text-subheading" style={{ fontSize: '12px' }}>
             Manage your exercise database and create custom workouts
           </p>
         </div>
         {isAdminUser && (
           <button
             onClick={handleAddExercise}
-            className="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
+            className="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 font-medium transition-colors flex items-center gap-2" style={{ borderRadius: '8px' }}
           >
             <Plus className="w-5 h-5" />
             Add Exercise
@@ -159,11 +159,11 @@ export default function ExercisesPage() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Filters Sidebar */}
         <div className="lg:col-span-1">
-          <div className="bg-gray-800 border border-gray-700 rounded-lg p-6 sticky top-6">
+          <div className="p-6 sticky top-6" style={{ backgroundColor: '#1B1B1B', borderRadius: '8px' }}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+              <h2 className="text-heading font-semibold flex items-center gap-2" style={{ fontSize: '16px' }}>
                 <Filter className="w-5 h-5" />
-                Filters
+                FILTERS
               </h2>
               {hasActiveFilters && (
                 <button
@@ -177,7 +177,7 @@ export default function ExercisesPage() {
             
             <div className="space-y-4">
               <div>
-                <label htmlFor="search" className="block text-sm font-medium text-gray-300 mb-2">
+                <label htmlFor="search" className="block text-sm font-medium text-subheading mb-2">
                   Search
                 </label>
                 <div className="relative">
@@ -188,20 +188,20 @@ export default function ExercisesPage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search exercises..."
-                    className="w-full pl-10 pr-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent" style={{ backgroundColor: '#232323', border: '1px solid #404040', borderRadius: '8px' }}
                   />
                 </div>
               </div>
               
               <div>
-                <label htmlFor="category" className="block text-sm font-medium text-gray-300 mb-2">
+                <label htmlFor="category" className="block text-sm font-medium text-subheading mb-2">
                   Category
                 </label>
                 <select
                   id="category"
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                  className="w-full px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent" style={{ backgroundColor: '#232323', border: '1px solid #404040', borderRadius: '8px' }}
                 >
                   <option value="">All Categories</option>
                   {options.categories.map((category) => (
@@ -213,14 +213,14 @@ export default function ExercisesPage() {
               </div>
               
               <div>
-                <label htmlFor="muscle-group" className="block text-sm font-medium text-gray-300 mb-2">
+                <label htmlFor="muscle-group" className="block text-sm font-medium text-subheading mb-2">
                   Muscle Group
                 </label>
                 <select
                   id="muscle-group"
                   value={selectedMuscleGroup}
                   onChange={(e) => setSelectedMuscleGroup(e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                  className="w-full px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent" style={{ backgroundColor: '#232323', border: '1px solid #404040', borderRadius: '8px' }}
                 >
                   <option value="">All Muscle Groups</option>
                   {options.muscleGroups.map((muscleGroup) => (
@@ -231,7 +231,7 @@ export default function ExercisesPage() {
                 </select>
               </div>
 
-              <div className="pt-2 text-sm text-gray-400">
+              <div className="pt-2 text-sm text-subheading">
                 {filteredExercises.length} exercise{filteredExercises.length !== 1 ? 's' : ''} found
               </div>
             </div>
@@ -246,11 +246,11 @@ export default function ExercisesPage() {
             </div>
           ) : filteredExercises.length === 0 ? (
             <div className="text-center py-12">
-              <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-white mb-2">
+              <AlertCircle className="w-12 h-12 text-subheading mx-auto mb-4" />
+              <h3 className="text-heading font-medium mb-2" style={{ fontSize: '16px' }}>
                 {hasActiveFilters ? 'No exercises match your filters' : 'No exercises found'}
               </h3>
-              <p className="text-gray-400 mb-4">
+              <p className="text-subheading mb-4" style={{ fontSize: '12px' }}>
                 {hasActiveFilters 
                   ? 'Try adjusting your search criteria or clear the filters.'
                   : 'Get started by adding your first exercise to the library.'
@@ -259,7 +259,7 @@ export default function ExercisesPage() {
               {!hasActiveFilters && isAdminUser && (
                 <button
                   onClick={handleAddExercise}
-                  className="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded-lg font-medium transition-colors inline-flex items-center gap-2"
+                  className="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 font-medium transition-colors inline-flex items-center gap-2" style={{ borderRadius: '8px' }}
                 >
                   <Plus className="w-4 h-4" />
                   Add Your First Exercise
@@ -293,22 +293,22 @@ export default function ExercisesPage() {
       {/* Delete Confirmation Modal */}
       {deleteConfirm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-800 rounded-lg border border-gray-700 w-full max-w-md p-6">
-            <h3 className="text-lg font-semibold text-white mb-4">Delete Exercise</h3>
-            <p className="text-gray-300 mb-6">
+          <div className="w-full max-w-md p-6" style={{ backgroundColor: '#1B1B1B', borderRadius: '8px', border: '1px solid #404040' }}>
+            <h3 className="text-heading font-semibold mb-4" style={{ fontSize: '16px' }}>Delete Exercise</h3>
+            <p className="text-subheading mb-6" style={{ fontSize: '12px' }}>
               Are you sure you want to delete <strong>{deleteConfirm.name}</strong>? 
               This action cannot be undone.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setDeleteConfirm(null)}
-                className="flex-1 px-4 py-2 text-gray-300 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
+                className="flex-1 px-4 py-2 text-subheading hover:bg-gray-600 transition-colors" style={{ backgroundColor: '#232323', borderRadius: '8px' }}
               >
                 Cancel
               </button>
               <button
                 onClick={confirmDelete}
-                className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white transition-colors" style={{ borderRadius: '8px' }}
               >
                 Delete
               </button>

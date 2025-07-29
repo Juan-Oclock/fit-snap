@@ -12,30 +12,10 @@ interface UserAvatarProps {
   className?: string;
 }
 
-// Generate consistent color based on name
+// Use consistent #979797 background color for all avatars
 function getAvatarColor(name: string): string {
-  const colors = [
-    'bg-red-500',
-    'bg-blue-500', 
-    'bg-green-500',
-    'bg-yellow-500',
-    'bg-purple-500',
-    'bg-pink-500',
-    'bg-indigo-500',
-    'bg-teal-500',
-    'bg-orange-500',
-    'bg-cyan-500',
-    'bg-lime-500',
-    'bg-emerald-500'
-  ];
-  
-  // Simple hash function to get consistent color
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  
-  return colors[Math.abs(hash) % colors.length];
+  // Return empty string since we'll use inline styles
+  return '';
 }
 
 // Get initials from name
@@ -65,11 +45,11 @@ export function UserAvatar({ name, username, size = 'md', className }: UserAvata
   return (
     <div
       className={cn(
-        'rounded-full flex items-center justify-center text-white font-semibold',
-        bgColor,
+        'rounded-full flex items-center justify-center font-semibold',
         sizeClasses[size],
         className
       )}
+      style={{ backgroundColor: '#979797', color: '#FFFFFF' }}
       title={displayName}
     >
       {initials}

@@ -91,9 +91,9 @@ export default function CalendarView({ userId }: CalendarViewProps) {
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (
-    <div className="card">
+    <div className="p-6" style={{ backgroundColor: '#1B1B1B', border: '1px solid #404040', borderRadius: '8px' }}>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold flex items-center gap-2">
+        <h2 className="text-xl font-semibold flex items-center gap-2 text-white">
           <CalendarIcon className="w-5 h-5" />
           Workout Calendar
         </h2>
@@ -101,18 +101,24 @@ export default function CalendarView({ userId }: CalendarViewProps) {
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigateMonth('prev')}
-            className="p-1 hover:bg-gray-700 rounded transition-colors"
+            className="p-1 rounded transition-colors text-white"
+            style={{ backgroundColor: '#232323' }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#404040'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#232323'}
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           
-          <h3 className="text-lg font-medium min-w-[140px] text-center">
+          <h3 className="text-lg font-medium min-w-[140px] text-center text-white">
             {monthNames[currentMonth]} {currentYear}
           </h3>
           
           <button
             onClick={() => navigateMonth('next')}
-            className="p-1 hover:bg-gray-700 rounded transition-colors"
+            className="p-1 rounded transition-colors text-white"
+            style={{ backgroundColor: '#232323' }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#404040'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#232323'}
           >
             <ChevronRight className="w-5 h-5" />
           </button>
@@ -124,11 +130,11 @@ export default function CalendarView({ userId }: CalendarViewProps) {
           <LoadingSpinner />
         </div>
       ) : (
-        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+        <div className="p-4" style={{ backgroundColor: '#232323', border: '1px solid #404040', borderRadius: '8px' }}>
           {/* Day headers */}
           <div className="grid grid-cols-7 gap-1 mb-2">
             {dayNames.map(day => (
-              <div key={day} className="text-center text-sm font-medium text-gray-400 py-2">
+              <div key={day} className="text-center text-sm font-medium py-2" style={{ color: '#979797' }}>
                 {day}
               </div>
             ))}
@@ -146,13 +152,29 @@ export default function CalendarView({ userId }: CalendarViewProps) {
               return (
                 <div
                   key={index}
-                  className={`
-                    aspect-square flex items-center justify-center text-sm rounded cursor-pointer transition-colors
-                    ${day ? 'hover:bg-gray-700' : ''}
-                    ${isWorkoutDay ? 'bg-primary text-gray-900 font-semibold hover:bg-yellow-500' : ''}
-                    ${isToday && !isWorkoutDay ? 'bg-gray-600 font-semibold' : ''}
-                    ${!day ? 'cursor-default' : ''}
-                  `}
+                  className="aspect-square flex items-center justify-center text-sm rounded-full cursor-pointer transition-colors"
+                  style={{
+                    backgroundColor: isWorkoutDay ? '#FFFC74' : (isToday && !isWorkoutDay ? '#404040' : 'transparent'),
+                    color: isWorkoutDay ? '#000000' : '#FFFFFF',
+                    fontWeight: (isWorkoutDay || isToday) ? '600' : '400',
+                    cursor: !day ? 'default' : 'pointer'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (day && !isWorkoutDay) {
+                      e.currentTarget.style.backgroundColor = '#404040';
+                    } else if (day && isWorkoutDay) {
+                      e.currentTarget.style.backgroundColor = '#e6e619';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (day && !isWorkoutDay && !isToday) {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    } else if (day && isWorkoutDay) {
+                      e.currentTarget.style.backgroundColor = '#FFFC74';
+                    } else if (isToday && !isWorkoutDay) {
+                      e.currentTarget.style.backgroundColor = '#404040';
+                    }
+                  }}
                   onClick={() => day && handleDayClick(day)}
                 >
                   {day}
@@ -161,13 +183,13 @@ export default function CalendarView({ userId }: CalendarViewProps) {
             })}
           </div>
 
-          <div className="mt-4 flex items-center gap-4 text-sm text-gray-400">
+          <div className="mt-4 flex items-center gap-4 text-sm" style={{ color: '#979797' }}>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-primary rounded"></div>
+              <div className="w-3 h-3 rounded" style={{ backgroundColor: '#FFFC74' }}></div>
               <span>Workout completed</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-gray-600 rounded"></div>
+              <div className="w-3 h-3 rounded" style={{ backgroundColor: '#404040' }}></div>
               <span>Today</span>
             </div>
           </div>
@@ -177,12 +199,15 @@ export default function CalendarView({ userId }: CalendarViewProps) {
       {/* Workout Modal */}
       {showWorkoutModal && selectedWorkout && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-gray-800 rounded-lg p-6 max-w-md w-full max-h-[80vh] overflow-y-auto">
+          <div className="p-6 max-w-md w-full max-h-[80vh] overflow-y-auto" style={{ backgroundColor: '#1B1B1B', border: '1px solid #404040', borderRadius: '8px' }}>
             <div className="flex justify-between items-start mb-4">
-              <h3 className="text-lg font-semibold">{selectedWorkout.name}</h3>
+              <h3 className="text-lg font-semibold text-white">{selectedWorkout.name}</h3>
               <button
                 onClick={() => setShowWorkoutModal(false)}
-                className="text-gray-400 hover:text-white"
+                className="transition-colors"
+                style={{ color: '#979797' }}
+                onMouseEnter={(e) => e.currentTarget.style.color = '#FFFFFF'}
+                onMouseLeave={(e) => e.currentTarget.style.color = '#979797'}
               >
                 ✕
               </button>
@@ -190,20 +215,20 @@ export default function CalendarView({ userId }: CalendarViewProps) {
             
             <div className="space-y-3 text-sm">
               <div>
-                <span className="text-gray-400">Date:</span>
-                <span className="ml-2">
+                <span style={{ color: '#979797' }}>Date:</span>
+                <span className="ml-2 text-white">
                   {new Date(selectedWorkout.completed_at).toLocaleDateString()}
                 </span>
               </div>
               
               <div>
-                <span className="text-gray-400">Type:</span>
-                <span className="ml-2 capitalize">{selectedWorkout.type}</span>
+                <span style={{ color: '#979797' }}>Type:</span>
+                <span className="ml-2 capitalize text-white">{selectedWorkout.type}</span>
               </div>
               
               <div>
-                <span className="text-gray-400">Duration:</span>
-                <span className="ml-2">
+                <span style={{ color: '#979797' }}>Duration:</span>
+                <span className="ml-2 text-white">
                   {Math.floor(selectedWorkout.duration / 60)}m {selectedWorkout.duration % 60}s
                 </span>
               </div>

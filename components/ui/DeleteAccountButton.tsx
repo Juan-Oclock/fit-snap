@@ -82,20 +82,23 @@ export default function DeleteAccountButton({ user }: DeleteAccountButtonProps) 
   }, [message]);
 
   return (
-    <div className="bg-dark-800 rounded-lg p-6 border border-dark-600">
-      <h2 className="text-xl font-semibold text-gray-100 mb-6">Account Actions</h2>
+    <div className="p-6" style={{ backgroundColor: '#1B1B1B', border: '1px solid #404040', borderRadius: '8px' }}>
+      <h2 className="text-xl font-semibold text-white mb-6">Account Actions</h2>
       
       <div className="space-y-4">
         {/* Sign Out Button */}
-        <div className="flex items-center justify-between p-4 bg-dark-700 rounded-lg border border-dark-600">
+        <div className="flex items-center justify-between p-4" style={{ backgroundColor: '#232323', border: '1px solid #404040', borderRadius: '8px' }}>
           <div>
-            <h3 className="text-sm font-medium text-gray-200">Sign Out</h3>
-            <p className="text-xs text-gray-400">Sign out of your account on this device</p>
+            <h3 className="text-sm font-medium text-white">Sign Out</h3>
+            <p className="text-xs" style={{ color: '#979797' }}>Sign out of your account on this device</p>
           </div>
           <button
             onClick={handleSignOut}
             disabled={isSigningOut}
-            className="bg-gray-600 hover:bg-gray-700 text-gray-100 font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+            className="font-medium py-2 px-4 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+            style={{ backgroundColor: isSigningOut ? '#5E5E5E' : '#404040', color: '#FFFFFF', borderRadius: '8px' }}
+            onMouseEnter={(e) => !isSigningOut && (e.currentTarget.style.backgroundColor = '#5E5E5E')}
+            onMouseLeave={(e) => !isSigningOut && (e.currentTarget.style.backgroundColor = '#404040')}
           >
             {isSigningOut ? (
               <>
@@ -109,19 +112,22 @@ export default function DeleteAccountButton({ user }: DeleteAccountButtonProps) 
         </div>
 
         {/* Delete Account Section */}
-        <div className="p-4 bg-red-900 bg-opacity-20 rounded-lg border border-red-700">
+        <div className="p-4" style={{ backgroundColor: '#1B1B1B', border: '1px solid #ef4444', borderRadius: '8px' }}>
           <div className="flex items-start space-x-3">
-            <AlertTriangle className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
+            <AlertTriangle className="w-5 h-5 mt-0.5 flex-shrink-0" style={{ color: '#ef4444' }} />
             <div className="flex-1">
-              <h3 className="text-sm font-medium text-red-200">Danger Zone</h3>
-              <p className="text-xs text-red-300 mt-1">
+              <h3 className="text-sm font-medium" style={{ color: '#ef4444' }}>Danger Zone</h3>
+              <p className="text-xs mt-1" style={{ color: '#fca5a5' }}>
                 Once you delete your account, there is no going back. This will permanently delete your profile, workouts, and all associated data.
               </p>
               
               {!showConfirmation ? (
                 <button
                   onClick={() => setShowConfirmation(true)}
-                  className="mt-3 bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center text-sm"
+                  className="mt-3 font-medium py-2 px-4 transition-colors flex items-center text-sm"
+                  style={{ backgroundColor: '#ef4444', color: '#FFFFFF', borderRadius: '8px' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#dc2626'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ef4444'}
                 >
                   <Trash2 className="w-4 h-4 mr-2" />
                   Delete Account
@@ -129,7 +135,7 @@ export default function DeleteAccountButton({ user }: DeleteAccountButtonProps) 
               ) : (
                 <div className="mt-3 space-y-3">
                   <div>
-                    <label htmlFor="confirm-delete" className="block text-xs font-medium text-red-200 mb-1">
+                    <label htmlFor="confirm-delete" className="block text-xs font-medium mb-1" style={{ color: '#ef4444' }}>
                       Type "DELETE" to confirm:
                     </label>
                     <input
@@ -138,7 +144,10 @@ export default function DeleteAccountButton({ user }: DeleteAccountButtonProps) 
                       value={confirmationText}
                       onChange={(e) => setConfirmationText(e.target.value)}
                       placeholder="DELETE"
-                      className="w-full px-3 py-2 bg-dark-700 border border-red-600 rounded-lg text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
+                      className="w-full px-3 py-2 text-white text-sm focus:outline-none"
+                      style={{ backgroundColor: '#232323', border: '1px solid #ef4444', borderRadius: '8px' }}
+                      onFocus={(e) => e.currentTarget.style.borderColor = '#dc2626'}
+                      onBlur={(e) => e.currentTarget.style.borderColor = '#ef4444'}
                     />
                   </div>
                   
@@ -146,7 +155,10 @@ export default function DeleteAccountButton({ user }: DeleteAccountButtonProps) 
                     <button
                       onClick={handleDeleteAccount}
                       disabled={isDeleting || confirmationText !== 'DELETE'}
-                      className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center text-sm"
+                      className="font-medium py-2 px-4 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center text-sm"
+                      style={{ backgroundColor: (isDeleting || confirmationText !== 'DELETE') ? '#5E5E5E' : '#ef4444', color: '#FFFFFF', borderRadius: '8px' }}
+                      onMouseEnter={(e) => !(isDeleting || confirmationText !== 'DELETE') && (e.currentTarget.style.backgroundColor = '#dc2626')}
+                      onMouseLeave={(e) => !(isDeleting || confirmationText !== 'DELETE') && (e.currentTarget.style.backgroundColor = '#ef4444')}
                     >
                       {isDeleting ? (
                         <>
@@ -164,7 +176,10 @@ export default function DeleteAccountButton({ user }: DeleteAccountButtonProps) 
                     <button
                       onClick={resetConfirmation}
                       disabled={isDeleting}
-                      className="bg-gray-600 hover:bg-gray-700 text-gray-100 font-medium py-2 px-4 rounded-lg transition-colors text-sm"
+                      className="font-medium py-2 px-4 transition-colors text-sm"
+                      style={{ backgroundColor: isDeleting ? '#5E5E5E' : '#404040', color: '#FFFFFF', borderRadius: '8px' }}
+                      onMouseEnter={(e) => !isDeleting && (e.currentTarget.style.backgroundColor = '#5E5E5E')}
+                      onMouseLeave={(e) => !isDeleting && (e.currentTarget.style.backgroundColor = '#404040')}
                     >
                       Cancel
                     </button>
@@ -177,11 +192,12 @@ export default function DeleteAccountButton({ user }: DeleteAccountButtonProps) 
 
         {/* Message Display */}
         {message && (
-          <div className={`p-3 rounded-lg text-sm ${
-            message.type === 'success' 
-              ? 'bg-green-900 border border-green-700 text-green-200' 
-              : 'bg-red-900 border border-red-700 text-red-200'
-          }`}>
+          <div className="p-3 text-sm" style={{
+            backgroundColor: '#1B1B1B',
+            border: `1px solid ${message.type === 'success' ? '#22c55e' : '#ef4444'}`,
+            borderRadius: '8px',
+            color: message.type === 'success' ? '#22c55e' : '#ef4444'
+          }}>
             {message.text}
           </div>
         )}

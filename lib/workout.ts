@@ -155,10 +155,8 @@ export const saveWorkout = async (
       // type: 'custom' // Temporarily removed due to schema issue
     };
     
-    // Include duration if provided
-    if (workoutData.duration !== undefined) {
-      workoutInsertData.duration = workoutData.duration;
-    }
+    // Include duration if provided, default to 0 if not provided
+    workoutInsertData.duration = workoutData.duration || 0;
     
     const { data: workout, error: workoutError } = await supabase
       .from('workouts')

@@ -145,7 +145,7 @@ export default function CommunityWorkoutCard({
   const displayName = workout.profiles?.full_name || workout.profiles?.username || 'Anonymous User';
 
   return (
-    <div className="bg-dark-800 border border-dark-700 rounded-lg p-6 space-y-4">
+    <div className="p-6 space-y-4" style={{ backgroundColor: '#1B1B1B', border: '1px solid #404040', borderRadius: '8px' }}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
@@ -156,12 +156,12 @@ export default function CommunityWorkoutCard({
           />
           <div>
             <p className="font-medium text-white">{displayName}</p>
-            <p className="text-sm text-gray-400">
+            <p className="text-sm" style={{ color: '#979797' }}>
               {formatRelativeTime(workout.completed_at)}
             </p>
           </div>
         </div>
-        <div className="text-xs px-2 py-1 bg-primary/20 text-primary rounded-full">
+        <div className="text-xs px-2 py-1" style={{ backgroundColor: 'rgba(255, 252, 116, 0.2)', color: '#FFFC74', borderRadius: '12px' }}>
           {workout.type}
         </div>
       </div>
@@ -171,12 +171,12 @@ export default function CommunityWorkoutCard({
         <h3 className="text-lg font-semibold text-white">{workout.name}</h3>
         
         {workout.notes && (
-          <p className="text-gray-300 text-sm">{workout.notes}</p>
+          <p className="text-sm" style={{ color: '#FFFFFF' }}>{workout.notes}</p>
         )}
 
         {/* Exercise Summary */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4 text-sm text-gray-400">
+          <div className="flex items-center space-x-4 text-sm" style={{ color: '#979797' }}>
             <div className="flex items-center space-x-1">
               <Target className="w-4 h-4" />
               <span>{exerciseSummary}</span>
@@ -192,7 +192,9 @@ export default function CommunityWorkoutCard({
             <button
               onClick={handleToggleDetails}
               disabled={loadingDetails}
-              className="flex items-center space-x-1 text-sm text-primary hover:text-primary-light transition-colors disabled:opacity-50"
+              className="flex items-center space-x-1 text-sm transition-colors disabled:opacity-50" style={{ color: '#FFFC74' }}
+              onMouseEnter={(e) => !loadingDetails && (e.currentTarget.style.color = '#fef9c3')}
+              onMouseLeave={(e) => !loadingDetails && (e.currentTarget.style.color = '#FFFC74')}
             >
               <span>{loadingDetails ? 'Loading...' : 'View Details'}</span>
               {showDetails ? (
@@ -206,18 +208,18 @@ export default function CommunityWorkoutCard({
 
         {/* Exercise Details */}
         {showDetails && (
-          <div className="bg-dark-700 rounded-lg p-4 space-y-4">
-            <h4 className="text-sm font-medium text-gray-300 mb-2">Exercise Details</h4>
+          <div className="p-4 space-y-4" style={{ backgroundColor: '#232323', borderRadius: '8px' }}>
+            <h4 className="text-sm font-medium mb-2" style={{ color: '#979797' }}>Exercise Details</h4>
 
             {detailedExercises.length > 0 ? (
               detailedExercises.map((workoutExercise, index) => (
-                <div key={index} className="bg-dark-800 rounded-lg p-3">
+                <div key={index} className="p-3" style={{ backgroundColor: '#1B1B1B', borderRadius: '8px' }}>
                   <div className="flex justify-between items-start mb-2">
                     <div>
                       <h5 className="font-medium text-white">
                         {index + 1}. {workoutExercise.exercises?.name || 'Unknown Exercise'}
                       </h5>
-                      <p className="text-gray-400 text-xs capitalize">
+                      <p className="text-xs capitalize" style={{ color: '#979797' }}>
                         {workoutExercise.exercises?.muscle_group}
                       </p>
                     </div>
@@ -225,7 +227,7 @@ export default function CommunityWorkoutCard({
                 
                   {workoutExercise.workout_sets && workoutExercise.workout_sets.length > 0 ? (
                     <div className="mt-3">
-                      <div className="grid grid-cols-4 gap-2 text-xs text-gray-400 mb-2">
+                      <div className="grid grid-cols-4 gap-2 text-xs mb-2" style={{ color: '#979797' }}>
                         <span>Set</span>
                         <span>Reps</span>
                         <span>Weight</span>
@@ -233,7 +235,7 @@ export default function CommunityWorkoutCard({
                       </div>
                       {workoutExercise.workout_sets.map((set: any, setIndex: number) => (
                         <div key={setIndex} className="grid grid-cols-4 gap-2 text-sm py-1">
-                          <span className="text-gray-300">#{setIndex + 1}</span>
+                          <span style={{ color: '#979797' }}>#{setIndex + 1}</span>
                           <span className="text-white">{set.reps || 0}</span>
                           <span className="text-white">{set.weight || 0} lbs</span>
                           <span className="text-white">{set.duration ? formatDuration(set.duration) : '-'}</span>
@@ -241,68 +243,74 @@ export default function CommunityWorkoutCard({
                       ))}
                     </div>
                   ) : (
-                    <div className="mt-3 text-gray-400 text-sm">
+                    <div className="mt-3 text-sm" style={{ color: '#979797' }}>
                       No sets recorded for this exercise
                     </div>
                   )}
                 </div>
               ))
             ) : (
-              <div className="text-gray-400 text-sm text-center py-4">
+              <div className="text-sm text-center py-4" style={{ color: '#979797' }}>
                 {loadingDetails ? 'Loading exercise details...' : 'No exercise details available'}
               </div>
             )}
           </div>
         )}
 
-        {/* Workout Photo */}
+        {/* Photo */}
         {workout.photo_url && (
-          <div className="relative w-full h-64 rounded-lg overflow-hidden bg-dark-700">
-            <Image
+          <div className="relative">
+            <img
               src={workout.photo_url}
-              alt={`${workout.name} photo`}
-              fill
-              className="object-cover"
+              alt="Workout photo"
+              className="w-full h-64 object-cover" style={{ borderRadius: '8px' }}
             />
           </div>
         )}
 
       </div>
 
-      {/* Actions */}
-      <div className="flex items-center justify-between pt-2 border-t border-dark-700">
-        <div className="flex items-center space-x-4">
-          <button
-            onClick={handleLikeToggle}
-            disabled={!currentUserId || isLoading}
-            className={`flex items-center space-x-1 transition-colors ${
-              isLiked 
-                ? 'text-red-500' 
-                : 'text-gray-400 hover:text-red-500'
-            } ${!currentUserId ? 'cursor-not-allowed opacity-50' : ''}`}
-          >
-            <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
-            <span className="text-sm">{likeCount}</span>
-          </button>
-          
-          <button 
-            onClick={handleCommentsToggle}
-            className="flex items-center space-x-1 text-gray-400 hover:text-primary transition-colors"
-          >
-            <MessageCircle className="w-5 h-5" />
-            <span className="text-sm">{workout._count?.community_comments || 0}</span>
-          </button>
-        </div>
+        {/* Social Media Style Actions */}
+        <div className="pt-4" style={{ borderTop: '1px solid #404040' }}>
+          <div className="flex items-center space-x-6">
+            <button
+              onClick={handleLikeToggle}
+              disabled={isLoading}
+              className="flex items-center space-x-2 transition-all duration-200 disabled:opacity-50 group"
+              style={{
+                color: isLiked ? '#ef4444' : '#979797'
+              }}
+              onMouseEnter={(e) => {
+                if (!isLiked && !isLoading) {
+                  e.currentTarget.style.color = '#ef4444';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isLiked && !isLoading) {
+                  e.currentTarget.style.color = '#979797';
+                }
+              }}
+            >
+              <Heart className={`w-6 h-6 transition-all duration-200 ${isLiked ? 'fill-current' : ''} group-hover:scale-110`} />
+              <span className="text-sm font-medium">{likeCount}</span>
+            </button>
 
-        <div className="text-xs text-gray-500">
-          <Clock className="w-3 h-3 inline mr-1" />
-          Workout completed
+            <button
+              onClick={handleCommentsToggle}
+              className="flex items-center space-x-2 transition-all duration-200 group"
+              style={{ color: '#979797' }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#FFFC74'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#979797'}
+            >
+              <MessageCircle className="w-6 h-6 transition-all duration-200 group-hover:scale-110" />
+              <span className="text-sm font-medium">{workout._count?.community_comments || 0}</span>
+            </button>
+          </div>
         </div>
-      </div>
 
       {/* Comments Section */}
       {showComments && (
-        <div className="border-t border-dark-700 pt-4 space-y-4">
+        <div className="pt-4 space-y-4" style={{ borderTop: '1px solid #404040' }}>
           {/* Add Comment Form */}
           {currentUserId && (
             <div className="flex space-x-3">
@@ -315,14 +323,26 @@ export default function CommunityWorkoutCard({
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="Add a comment..."
-                  className="w-full bg-dark-700 border border-dark-600 rounded-lg px-3 py-2 text-white placeholder-gray-400 resize-none focus:outline-none focus:border-primary"
+                  className="w-full px-3 py-2 text-white resize-none focus:outline-none" style={{ backgroundColor: '#232323', border: '1px solid #404040', borderRadius: '8px', color: '#FFFFFF' }}
+                  onFocus={(e) => e.currentTarget.style.borderColor = '#FFFC74'}
+                  onBlur={(e) => e.currentTarget.style.borderColor = '#404040'}
                   rows={2}
                 />
                 <div className="flex justify-end">
                   <button
                     onClick={handleAddComment}
                     disabled={!newComment.trim() || addingComment}
-                    className="px-4 py-1 bg-primary text-white rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors"
+                    className="px-4 py-1 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors" style={{ backgroundColor: '#FFFC74', color: '#000000', borderRadius: '8px' }}
+                    onMouseEnter={(e) => {
+                      if (!(!newComment.trim() || addingComment)) {
+                        e.currentTarget.style.backgroundColor = '#fef9c3';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!(!newComment.trim() || addingComment)) {
+                        e.currentTarget.style.backgroundColor = '#FFFC74';
+                      }
+                    }}
                   >
                     {addingComment ? 'Posting...' : 'Post'}
                   </button>
@@ -334,7 +354,7 @@ export default function CommunityWorkoutCard({
           {/* Comments List */}
           <div className="space-y-3">
             {loadingComments ? (
-              <div className="text-center text-gray-400 py-4">
+              <div className="text-center py-4" style={{ color: '#979797' }}>
                 Loading comments...
               </div>
             ) : comments.length > 0 ? (
@@ -344,21 +364,21 @@ export default function CommunityWorkoutCard({
                     username={comment.profiles?.username || 'Unknown'} 
                     size="sm" 
                   />
-                  <div className="flex-1 bg-dark-700 rounded-lg p-3">
+                  <div className="flex-1 p-3" style={{ backgroundColor: '#232323', borderRadius: '8px' }}>
                     <div className="flex items-center space-x-2 mb-1">
                       <span className="font-medium text-white text-sm">
                         {comment.profiles?.username || 'Unknown User'}
                       </span>
-                      <span className="text-xs text-gray-400">
+                      <span className="text-xs" style={{ color: '#979797' }}>
                         {formatRelativeTime(comment.created_at)}
                       </span>
                     </div>
-                    <p className="text-gray-300 text-sm">{comment.content}</p>
+                    <p className="text-white text-sm">{comment.content}</p>
                   </div>
                 </div>
               ))
             ) : (
-              <div className="text-center text-gray-400 py-4">
+              <div className="text-center py-4" style={{ color: '#979797' }}>
                 No comments yet. Be the first to comment!
               </div>
             )}

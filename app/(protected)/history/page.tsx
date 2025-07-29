@@ -319,11 +319,15 @@ export default function HistoryPage() {
             )}
           </div>
         ) : (
-          <div className="space-y-4">
-            {workouts.map((workout) => {
+          <div className="space-y-6">
+            {workouts.map((workout, index) => {
               const isExpanded = expandedWorkouts.has(workout.id);
               return (
-                <div key={workout.id} className="border border-dark-700 rounded-lg p-4 hover:border-dark-600 transition-colors">
+                <div key={workout.id}>
+                  {index > 0 && (
+                    <div className="border-t border-dark-600 mb-6"></div>
+                  )}
+                  <div className="border border-dark-700 rounded-lg p-4 hover:border-dark-600 hover:bg-dark-800/50 transition-all duration-200">
                   <div className="flex justify-between items-start mb-2">
                     <div>
                       <h3 className="font-medium text-white">{workout.name || 'Untitled Workout'}</h3>
@@ -336,22 +340,6 @@ export default function HistoryPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <button 
-                        onClick={() => toggleWorkoutExpansion(workout.id)}
-                        className="text-primary hover:text-primary/80 flex items-center gap-1 text-sm"
-                      >
-                        {isExpanded ? (
-                          <>
-                            Hide Details
-                            <ChevronUpIcon className="h-4 w-4" />
-                          </>
-                        ) : (
-                          <>
-                            View Details
-                            <ChevronDownIcon className="h-4 w-4" />
-                          </>
-                        )}
-                      </button>
                       <button
                         onClick={() => handleDeleteWorkout(workout.id, workout.name)}
                         disabled={deletingWorkouts.has(workout.id)}
@@ -371,6 +359,25 @@ export default function HistoryPage() {
                     {workout.exercise_count} exercises • {workout.total_sets} sets • {workout.total_weight}kg max
                   </div>
                   
+                  <div className="mt-2">
+                    <button 
+                      onClick={() => toggleWorkoutExpansion(workout.id)}
+                      className="text-primary hover:text-primary/80 flex items-center gap-1 text-xs"
+                    >
+                      {isExpanded ? (
+                        <>
+                          Hide Details
+                          <ChevronUpIcon className="h-3 w-3" />
+                        </>
+                      ) : (
+                        <>
+                          View Details
+                          <ChevronDownIcon className="h-3 w-3" />
+                        </>
+                      )}
+                    </button>
+                  </div>
+                  
                   {/* Expanded Details */}
                   {isExpanded && (
                     <div className="mt-4 pt-4 border-t border-dark-700">
@@ -384,13 +391,13 @@ export default function HistoryPage() {
                       <div className="space-y-4">
                         <h4 className="font-medium text-white">Exercises</h4>
                         {workout.workout_exercises.map((workoutExercise, index) => (
-                          <div key={workoutExercise.id} className="bg-dark-800 rounded-lg p-3">
-                            <div className="flex justify-between items-start mb-2">
+                          <div key={workoutExercise.id} className="bg-dark-800 rounded-lg px-4 py-3">
+                            <div className="flex justify-between items-start mb-3">
                               <div>
-                                <h5 className="font-medium text-white">
+                                <h5 className="font-medium text-white text-sm">
                                   {index + 1}. {workoutExercise.exercise.name}
                                 </h5>
-                                <p className="text-gray-400 text-xs capitalize">
+                                <p className="text-gray-400 text-xs capitalize mt-1">
                                   {workoutExercise.exercise.muscle_group} • {workoutExercise.exercise.category}
                                 </p>
                               </div>
@@ -398,14 +405,14 @@ export default function HistoryPage() {
                             
                             {workoutExercise.workout_sets.length > 0 && (
                               <div className="mt-3">
-                                <div className="grid grid-cols-4 gap-2 text-xs text-gray-400 mb-2">
+                                <div className="grid grid-cols-4 gap-3 text-xs text-gray-400 mb-2 px-1">
                                   <span>Set</span>
                                   <span>Reps</span>
                                   <span>Weight</span>
                                   <span>Duration</span>
                                 </div>
                                 {workoutExercise.workout_sets.map((set, setIndex) => (
-                                  <div key={set.id} className="grid grid-cols-4 gap-2 text-sm py-1">
+                                  <div key={set.id} className="grid grid-cols-4 gap-3 text-xs py-1.5 px-1">
                                     <span className="text-gray-300">#{setIndex + 1}</span>
                                     <span className="text-white">{set.reps}</span>
                                     <span className="text-white">{set.weight || 0}kg</span>
@@ -430,6 +437,7 @@ export default function HistoryPage() {
                       </div>
                     </div>
                   )}
+                  </div>
                 </div>
               );
             })}

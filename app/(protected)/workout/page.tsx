@@ -699,18 +699,20 @@ export default function WorkoutPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen text-white" style={{ backgroundColor: '#151515' }}>
       {/* Rest Timer Modal */}
       {showRestTimer && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-gray-800 p-8 rounded-lg text-center">
-            <div className="text-6xl font-mono font-bold text-yellow-400 mb-4">
+          <div className="p-8 text-center" style={{ backgroundColor: '#1B1B1B', borderRadius: '8px', border: '1px solid #404040' }}>
+            <div className="text-6xl font-mono font-bold mb-4" style={{ color: '#FFFC74' }}>
               {formatTime(restTimeRemaining)}
             </div>
-            <div className="text-lg text-gray-300 mb-6">Rest Time</div>
+            <div className="text-lg mb-6" style={{ color: '#979797' }}>Rest Time</div>
             <button
               onClick={stopRestTimer}
-              className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              className="px-6 py-2 text-white transition-colors" style={{ backgroundColor: '#dc2626', borderRadius: '8px' }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#b91c1c'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#dc2626'}
             >
               Stop Rest
             </button>
@@ -721,11 +723,11 @@ export default function WorkoutPage() {
       {/* Photo Confirmation Dialog */}
       {showPhotoConfirmDialog && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-gray-800 p-6 rounded-lg max-w-md mx-4 text-center">
+          <div className="p-6 max-w-md mx-4 text-center" style={{ backgroundColor: '#1B1B1B', borderRadius: '8px', border: '1px solid #404040' }}>
             <h3 className="text-lg font-semibold text-white mb-4">
               Would you like to add a workout photo?
             </h3>
-            <p className="text-gray-300 text-sm mb-6">
+            <p className="text-sm mb-6" style={{ color: '#979797' }}>
               Photos help track your progress! You can always add this later in your next workout session.
             </p>
             <div className="flex space-x-3">
@@ -735,7 +737,9 @@ export default function WorkoutPage() {
                   // Proceed to save without photo
                   saveWorkoutData();
                 }}
-                className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                className="flex-1 px-4 py-2 text-white transition-colors" style={{ backgroundColor: '#232323', borderRadius: '8px' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2a2a2a'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#232323'}
               >
                 No, Save Now
               </button>
@@ -752,7 +756,9 @@ export default function WorkoutPage() {
                   // Remove highlight after 3 seconds
                   setTimeout(() => setHighlightPhotoSection(false), 3000);
                 }}
-                className="flex-1 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+                className="flex-1 px-4 py-2 text-black transition-colors" style={{ backgroundColor: '#FFFC74', borderRadius: '8px' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#fef9c3'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#FFFC74'}
               >
                 Yes, Add Photo
               </button>
@@ -763,15 +769,15 @@ export default function WorkoutPage() {
 
 
 
-      <div className="max-w-2xl mx-auto p-4 space-y-6">
+      <div className="container-app space-y-6 max-w-2xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-yellow-400">New Workout</h1>
+          <h1 className="text-heading" style={{ fontSize: '24px', textTransform: 'uppercase', color: '#FFFFFF' }}>NEW WORKOUT</h1>
         </div>
 
         {/* Workout Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
+          <label className="block text-subheading mb-2" style={{ fontSize: '12px', color: '#979797' }}>
             Workout Name *
           </label>
           <input
@@ -779,29 +785,31 @@ export default function WorkoutPage() {
             value={workoutName}
             onChange={(e) => setWorkoutName(e.target.value)}
             placeholder="e.g., Push Day, Morning Run, etc."
-            className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+            className="w-full px-3 py-2 text-white focus:outline-none focus:ring-2 focus:border-transparent" style={{ backgroundColor: '#232323', border: '1px solid #404040', borderRadius: '8px', color: '#FFFFFF' }}
+            onFocus={(e) => e.currentTarget.style.borderColor = '#FFFC74'}
+            onBlur={(e) => e.currentTarget.style.borderColor = '#404040'}
             required
           />
         </div>
 
         {/* Global Completed Sets Table */}
         {persistentCompletedSets.length > 0 && (
-          <div className="bg-gray-800 rounded-lg p-4">
+          <div className="p-4" style={{ backgroundColor: '#1B1B1B', borderRadius: '8px' }}>
             <h3 className="text-lg font-semibold text-white mb-3">Completed Exercise</h3>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-600">
-                    <th className="text-left py-2 px-2 text-gray-400 font-medium">Exercise</th>
-                    <th className="text-left py-2 px-2 text-gray-400 font-medium">Set</th>
-                    <th className="text-left py-2 px-2 text-gray-400 font-medium">Reps</th>
-                    <th className="text-left py-2 px-2 text-gray-400 font-medium">Weight</th>
-                    <th className="text-left py-2 px-2 text-gray-400 font-medium">Timer</th>
+                  <tr style={{ borderBottom: '1px solid #404040' }}>
+                    <th className="text-left py-2 px-2 font-medium" style={{ color: '#979797' }}>Exercise</th>
+                    <th className="text-left py-2 px-2 font-medium" style={{ color: '#979797' }}>Set</th>
+                    <th className="text-left py-2 px-2 font-medium" style={{ color: '#979797' }}>Reps</th>
+                    <th className="text-left py-2 px-2 font-medium" style={{ color: '#979797' }}>Weight</th>
+                    <th className="text-left py-2 px-2 font-medium" style={{ color: '#979797' }}>Timer</th>
                   </tr>
                 </thead>
                 <tbody>
                   {persistentCompletedSets.map((completedSet, index) => (
-                    <tr key={`${completedSet.exerciseId}-${completedSet.setNumber}-${index}`} className="border-b border-gray-600 last:border-b-0">
+                    <tr key={`${completedSet.exerciseId}-${completedSet.setNumber}-${index}`} className="last:border-b-0" style={{ borderBottom: '1px solid #404040' }}>
                       <td className="py-2 px-2 text-white font-medium">{completedSet.exerciseName}</td>
                       <td className="py-2 px-2 text-white">#{completedSet.setNumber}</td>
                       <td className="py-2 px-2 text-white">{completedSet.reps}</td>
@@ -817,24 +825,26 @@ export default function WorkoutPage() {
 
         {/* Exercise Search */}
         <div className="relative">
-          <label className="block text-sm font-medium text-gray-300 mb-2">
+          <label className="block text-subheading mb-2" style={{ fontSize: '12px', color: '#979797' }}>
             Add Exercise
           </label>
           <div className="relative">
-            <Search className={`absolute left-3 top-3 w-5 h-5 ${
-              isAnyTimerRunning() ? 'text-gray-600' : 'text-gray-400'
-            }`} />
+            <Search className={`absolute left-3 top-3 w-5 h-5`} style={{ color: isAnyTimerRunning() ? '#5E5E5E' : '#979797' }} />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => !isAnyTimerRunning() && handleSearchExercises(e.target.value)}
               placeholder={isAnyTimerRunning() ? "Complete current exercise to add new ones..." : "Search exercises..."}
               disabled={isAnyTimerRunning()}
-              className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none ${
-                isAnyTimerRunning()
-                  ? 'bg-gray-900 border-gray-600 text-gray-500 placeholder-gray-600 cursor-not-allowed'
-                  : 'bg-gray-800 border-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-yellow-400 focus:border-transparent'
-              }`}
+              className="w-full pl-10 pr-3 py-2 focus:outline-none" style={{
+                backgroundColor: isAnyTimerRunning() ? '#151515' : '#232323',
+                border: `1px solid ${isAnyTimerRunning() ? '#5E5E5E' : '#404040'}`,
+                borderRadius: '8px',
+                color: isAnyTimerRunning() ? '#5E5E5E' : '#FFFFFF',
+                cursor: isAnyTimerRunning() ? 'not-allowed' : 'text'
+              }}
+              onFocus={(e) => !isAnyTimerRunning() && (e.currentTarget.style.borderColor = '#FFFC74')}
+              onBlur={(e) => !isAnyTimerRunning() && (e.currentTarget.style.borderColor = '#404040')}
             />
             {isSearching && (
               <div className="absolute right-3 top-3">
@@ -845,9 +855,9 @@ export default function WorkoutPage() {
 
           {/* Search Results */}
           {showSearchResults && !isAnyTimerRunning() && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-gray-800 border border-gray-700 rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto">
+            <div className="absolute top-full left-0 right-0 mt-1 shadow-lg z-10 max-h-60 overflow-y-auto" style={{ backgroundColor: '#1B1B1B', border: '1px solid #404040', borderRadius: '8px' }}>
               {searchResults.length === 0 ? (
-                <div className="p-3 text-gray-400 text-center">
+                <div className="p-3 text-center" style={{ color: '#979797' }}>
                   {isSearching ? 'Searching...' : 'No exercises found'}
                 </div>
               ) : (
@@ -855,10 +865,12 @@ export default function WorkoutPage() {
                   <button
                     key={exercise.id}
                     onClick={() => addExercise(exercise)}
-                    className="w-full text-left p-3 hover:bg-gray-700 transition-colors border-b border-gray-700 last:border-b-0"
+                    className="w-full text-left p-3 transition-colors last:border-b-0" style={{ borderBottom: '1px solid #404040' }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#232323'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                   >
                     <div className="font-medium text-white">{exercise.name}</div>
-                    <div className="text-sm text-gray-400">
+                    <div className="text-sm" style={{ color: '#979797' }}>
                       {exercise.category} • {exercise.equipment || 'No equipment'}
                     </div>
                   </button>
@@ -870,20 +882,22 @@ export default function WorkoutPage() {
 
         {/* Added Exercises */}
         {workoutExercises.map((workoutExercise, exerciseIndex) => (
-          <div key={workoutExercise.id} className="bg-gray-800 rounded-lg p-4 space-y-4">
+          <div key={workoutExercise.id} className="p-4 space-y-4" style={{ backgroundColor: '#1B1B1B', borderRadius: '8px' }}>
             {/* Exercise Header */}
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-semibold text-white">
                   {workoutExercise.exercise.name}
                 </h3>
-                <p className="text-sm text-gray-400">
+                <p className="text-sm" style={{ color: '#979797' }}>
                   {workoutExercise.exercise.category} • {workoutExercise.exercise.equipment || 'No equipment'}
                 </p>
               </div>
               <button
                 onClick={() => removeExercise(workoutExercise.id)}
-                className="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-700 transition-colors"
+                className="w-8 h-8 text-white flex items-center justify-center transition-colors" style={{ backgroundColor: '#dc2626', borderRadius: '50%' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#b91c1c'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#dc2626'}
               >
                 <X className="w-4 h-4" />
               </button>
@@ -891,8 +905,8 @@ export default function WorkoutPage() {
 
             {/* Exercise Validation Message */}
             {exerciseValidationErrors[workoutExercise.id] && (
-              <div className="bg-red-900/50 border border-red-500 rounded-lg p-3">
-                <p className="text-red-300 text-sm">
+              <div className="p-3" style={{ backgroundColor: 'rgba(153, 27, 27, 0.5)', border: '1px solid #ef4444', borderRadius: '8px' }}>
+                <p className="text-sm" style={{ color: '#fca5a5' }}>
                   {exerciseValidationErrors[workoutExercise.id]}
                 </p>
               </div>

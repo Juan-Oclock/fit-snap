@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import { Workout, Quote, WorkoutSet } from '@/types';
+import { Workout, WorkoutWithExercises, Quote, WorkoutSet } from '@/types';
 import { getRemainingDaysInMonth } from './date-utils';
 
 // Get user's monthly workout goal (default to 12 if not set)
@@ -136,10 +136,24 @@ export async function getPersonalRecords(userId: string): Promise<Array<{exercis
 }
 
 // Get recent workouts (last 3)
-export async function getRecentWorkouts(userId: string): Promise<Workout[]> {
+export async function getRecentWorkouts(userId: string): Promise<WorkoutWithExercises[]> {
   const { data, error } = await supabase
     .from('workouts')
-    .select('*')
+    .select(`
+      *,
+      workout_exercises(
+        id,
+        exercise_id,
+        order_index,
+        exercises(
+          name
+        ),
+        workout_sets(
+          reps,
+          weight
+        )
+      )
+    `)
     .eq('user_id', userId)
     .order('completed_at', { ascending: false })
     .limit(3);
@@ -149,7 +163,13 @@ export async function getRecentWorkouts(userId: string): Promise<Workout[]> {
     return [];
   }
   
-  return data || [];
+  // Ensure workout_exercises is always an array
+  const workoutsWithExercises = (data || []).map(workout => ({
+    ...workout,
+    workout_exercises: workout.workout_exercises || []
+  }));
+  
+  return workoutsWithExercises;
 }
 
 // Get a random daily quote

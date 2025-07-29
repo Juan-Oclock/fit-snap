@@ -76,23 +76,25 @@ export default function DashboardCalendar({ userId }: DashboardCalendarProps) {
     <div>
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <button
-          onClick={() => navigateMonth('prev')}
-          className="p-1 hover:bg-gray-700 rounded transition-colors"
-        >
-          <ChevronLeft className="w-4 h-4 text-gray-400" />
-        </button>
-        
         <h3 className="text-sm font-medium text-white">
           {monthNames[currentMonth]} {currentYear}
         </h3>
         
-        <button
-          onClick={() => navigateMonth('next')}
-          className="p-1 hover:bg-gray-700 rounded transition-colors"
-        >
-          <ChevronRight className="w-4 h-4 text-gray-400" />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => navigateMonth('prev')}
+            className="p-1 hover:bg-gray-700 rounded transition-colors"
+          >
+            <ChevronLeft className="w-4 h-4 text-gray-400" />
+          </button>
+          
+          <button
+            onClick={() => navigateMonth('next')}
+            className="p-1 hover:bg-gray-700 rounded transition-colors"
+          >
+            <ChevronRight className="w-4 h-4 text-gray-400" />
+          </button>
+        </div>
       </div>
 
       {loading ? (
@@ -131,8 +133,9 @@ export default function DashboardCalendar({ userId }: DashboardCalendarProps) {
                       ${isWorkoutDay ? 'bg-yellow-500 text-gray-900 font-semibold' : ''}
                       ${isToday && !isWorkoutDay ? 'bg-gray-600 text-white font-semibold' : ''}
                       ${!day ? 'cursor-default' : 'cursor-pointer'}
-                      ${!isWorkoutDay && !isToday && day ? 'text-gray-300' : ''}
+                      ${!isWorkoutDay && !isToday && day ? 'border border-solid' : ''}
                     `}
+                    style={!isWorkoutDay && !isToday && day ? { borderColor: '#3C3C3C', color: '#7E7E7E' } : {}}
                   >
                     {day}
                   </div>

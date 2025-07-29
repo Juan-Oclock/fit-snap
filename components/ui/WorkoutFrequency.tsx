@@ -39,8 +39,8 @@ export default function WorkoutFrequency({ userId }: WorkoutFrequencyProps) {
 
   if (loading) {
     return (
-      <div className="card">
-        <h2 className="text-xl font-semibold mb-4">Workout Frequency</h2>
+      <div className="p-6" style={{ backgroundColor: '#1B1B1B', border: '1px solid #404040', borderRadius: '8px' }}>
+        <h2 className="text-xl font-semibold mb-4 text-white">WORKOUT FREQUENCY</h2>
         <div className="flex justify-center py-8">
           <LoadingSpinner />
         </div>
@@ -50,9 +50,9 @@ export default function WorkoutFrequency({ userId }: WorkoutFrequencyProps) {
 
   if (!frequency) {
     return (
-      <div className="card">
-        <h2 className="text-xl font-semibold mb-4">Workout Frequency</h2>
-        <p className="text-gray-400">Unable to load frequency data</p>
+      <div className="p-6" style={{ backgroundColor: '#1B1B1B', border: '1px solid #404040', borderRadius: '8px' }}>
+        <h2 className="text-xl font-semibold mb-4 text-white">WORKOUT FREQUENCY</h2>
+        <p style={{ color: '#979797' }}>Unable to load frequency data</p>
       </div>
     );
   }
@@ -61,15 +61,15 @@ export default function WorkoutFrequency({ userId }: WorkoutFrequencyProps) {
   const monthlyChange = frequency.thisMonth - frequency.lastMonth;
 
   const getTrendIcon = (change: number) => {
-    if (change > 0) return <TrendingUp className="w-4 h-4 text-green-400" />;
-    if (change < 0) return <TrendingDown className="w-4 h-4 text-red-400" />;
-    return <Minus className="w-4 h-4 text-gray-400" />;
+    if (change > 0) return <TrendingUp className="w-4 h-4" style={{ color: '#22c55e' }} />;
+    if (change < 0) return <TrendingDown className="w-4 h-4" style={{ color: '#ef4444' }} />;
+    return <Minus className="w-4 h-4" style={{ color: '#979797' }} />;
   };
 
   const getTrendColor = (change: number) => {
-    if (change > 0) return 'text-green-400';
-    if (change < 0) return 'text-red-400';
-    return 'text-gray-400';
+    if (change > 0) return '#22c55e';
+    if (change < 0) return '#ef4444';
+    return '#979797';
   };
 
   const getTrendText = (change: number) => {
@@ -78,18 +78,18 @@ export default function WorkoutFrequency({ userId }: WorkoutFrequencyProps) {
   };
 
   return (
-    <div className="card">
-      <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
-        <BarChart3 className="w-5 h-5" />
-        Workout Frequency
+    <div className="p-6" style={{ backgroundColor: '#1B1B1B', border: '1px solid #404040', borderRadius: '8px' }}>
+      <h2 className="text-xl font-semibold mb-6 flex items-center gap-2 text-white">
+        <BarChart3 className="w-5 h-5" style={{ color: '#FFFC74' }} />
+        WORKOUT FREQUENCY
       </h2>
 
       <div className="space-y-6">
         {/* Weekly Comparison */}
-        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+        <div className="p-4" style={{ backgroundColor: '#232323', border: '1px solid #404040', borderRadius: '8px' }}>
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-medium text-gray-300">Weekly</h3>
-            <div className={`flex items-center gap-1 text-sm ${getTrendColor(weeklyChange)}`}>
+            <h3 className="font-medium text-white">Weekly</h3>
+            <div className="flex items-center gap-1 text-sm" style={{ color: getTrendColor(weeklyChange) }}>
               {getTrendIcon(weeklyChange)}
               <span>{getTrendText(weeklyChange)} from last week</span>
             </div>
@@ -97,49 +97,49 @@ export default function WorkoutFrequency({ userId }: WorkoutFrequencyProps) {
           
           <div className="grid grid-cols-2 gap-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-primary mb-1">
+              <div className="text-2xl font-bold mb-1" style={{ color: '#FFFC74' }}>
                 {frequency.thisWeek}
               </div>
-              <div className="text-sm text-gray-400">This Week</div>
+              <div className="text-sm" style={{ color: '#979797' }}>This Week</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-gray-400 mb-1">
+              <div className="text-2xl font-bold mb-1" style={{ color: '#979797' }}>
                 {frequency.lastWeek}
               </div>
-              <div className="text-sm text-gray-400">Last Week</div>
+              <div className="text-sm" style={{ color: '#979797' }}>Last Week</div>
             </div>
           </div>
 
           {/* Visual bar comparison */}
           <div className="mt-4 space-y-2">
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-400 w-16">This week</span>
-              <div className="flex-1 bg-gray-700 rounded-full h-2">
+              <span className="text-xs w-16" style={{ color: '#979797' }}>This week</span>
+              <div className="flex-1 h-2 rounded-full" style={{ backgroundColor: '#404040' }}>
                 <div
-                  className="bg-primary h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${Math.max((frequency.thisWeek / Math.max(frequency.thisWeek, frequency.lastWeek, 1)) * 100, 5)}%` }}
+                  className="h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${Math.max((frequency.thisWeek / Math.max(frequency.thisWeek, frequency.lastWeek, 1)) * 100, 5)}%`, backgroundColor: '#FFFC74' }}
                 />
               </div>
-              <span className="text-xs text-primary w-6">{frequency.thisWeek}</span>
+              <span className="text-xs w-6" style={{ color: '#FFFC74' }}>{frequency.thisWeek}</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-400 w-16">Last week</span>
-              <div className="flex-1 bg-gray-700 rounded-full h-2">
+              <span className="text-xs w-16" style={{ color: '#979797' }}>Last week</span>
+              <div className="flex-1 h-2 rounded-full" style={{ backgroundColor: '#404040' }}>
                 <div
-                  className="bg-gray-500 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${Math.max((frequency.lastWeek / Math.max(frequency.thisWeek, frequency.lastWeek, 1)) * 100, 5)}%` }}
+                  className="h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${Math.max((frequency.lastWeek / Math.max(frequency.thisWeek, frequency.lastWeek, 1)) * 100, 5)}%`, backgroundColor: '#666666' }}
                 />
               </div>
-              <span className="text-xs text-gray-400 w-6">{frequency.lastWeek}</span>
+              <span className="text-xs w-6" style={{ color: '#979797' }}>{frequency.lastWeek}</span>
             </div>
           </div>
         </div>
 
         {/* Monthly Comparison */}
-        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+        <div className="p-4" style={{ backgroundColor: '#232323', border: '1px solid #404040', borderRadius: '8px' }}>
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-medium text-gray-300">Monthly</h3>
-            <div className={`flex items-center gap-1 text-sm ${getTrendColor(monthlyChange)}`}>
+            <h3 className="font-medium text-white">Monthly</h3>
+            <div className="flex items-center gap-1 text-sm" style={{ color: getTrendColor(monthlyChange) }}>
               {getTrendIcon(monthlyChange)}
               <span>{getTrendText(monthlyChange)} from last month</span>
             </div>
@@ -147,55 +147,55 @@ export default function WorkoutFrequency({ userId }: WorkoutFrequencyProps) {
           
           <div className="grid grid-cols-2 gap-4">
             <div className="text-center">
-              <div className="text-2xl font-bold text-primary mb-1">
+              <div className="text-2xl font-bold mb-1" style={{ color: '#FFFC74' }}>
                 {frequency.thisMonth}
               </div>
-              <div className="text-sm text-gray-400">This Month</div>
+              <div className="text-sm" style={{ color: '#979797' }}>This Month</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-gray-400 mb-1">
+              <div className="text-2xl font-bold mb-1" style={{ color: '#979797' }}>
                 {frequency.lastMonth}
               </div>
-              <div className="text-sm text-gray-400">Last Month</div>
+              <div className="text-sm" style={{ color: '#979797' }}>Last Month</div>
             </div>
           </div>
 
           {/* Visual bar comparison */}
           <div className="mt-4 space-y-2">
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-400 w-16">This month</span>
-              <div className="flex-1 bg-gray-700 rounded-full h-2">
+              <span className="text-xs w-16" style={{ color: '#979797' }}>This month</span>
+              <div className="flex-1 h-2 rounded-full" style={{ backgroundColor: '#404040' }}>
                 <div
-                  className="bg-primary h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${Math.max((frequency.thisMonth / Math.max(frequency.thisMonth, frequency.lastMonth, 1)) * 100, 5)}%` }}
+                  className="h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${Math.max((frequency.thisMonth / Math.max(frequency.thisMonth, frequency.lastMonth, 1)) * 100, 5)}%`, backgroundColor: '#FFFC74' }}
                 />
               </div>
-              <span className="text-xs text-primary w-6">{frequency.thisMonth}</span>
+              <span className="text-xs w-6" style={{ color: '#FFFC74' }}>{frequency.thisMonth}</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-400 w-16">Last month</span>
-              <div className="flex-1 bg-gray-700 rounded-full h-2">
+              <span className="text-xs w-16" style={{ color: '#979797' }}>Last month</span>
+              <div className="flex-1 h-2 rounded-full" style={{ backgroundColor: '#404040' }}>
                 <div
-                  className="bg-gray-500 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${Math.max((frequency.lastMonth / Math.max(frequency.thisMonth, frequency.lastMonth, 1)) * 100, 5)}%` }}
+                  className="h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${Math.max((frequency.lastMonth / Math.max(frequency.thisMonth, frequency.lastMonth, 1)) * 100, 5)}%`, backgroundColor: '#666666' }}
                 />
               </div>
-              <span className="text-xs text-gray-400 w-6">{frequency.lastMonth}</span>
+              <span className="text-xs w-6" style={{ color: '#979797' }}>{frequency.lastMonth}</span>
             </div>
           </div>
         </div>
 
         {/* Insights */}
-        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-          <h3 className="font-medium text-gray-300 mb-3">Insights</h3>
+        <div className="p-4" style={{ backgroundColor: '#232323', border: '1px solid #404040', borderRadius: '8px' }}>
+          <h3 className="font-medium text-white mb-3">Insights</h3>
           <div className="space-y-2 text-sm">
             {weeklyChange > 0 && (
-              <p className="text-green-400">
+              <p style={{ color: '#22c55e' }}>
                 📈 Great job! You're more active this week than last week.
               </p>
             )}
             {weeklyChange < 0 && (
-              <p className="text-yellow-400">
+              <p style={{ color: '#FFFC74' }}>
                 💪 Try to match or exceed last week's activity level.
               </p>
             )}

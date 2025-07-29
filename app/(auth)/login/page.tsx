@@ -207,8 +207,8 @@ export default function LoginPage() {
             </button>
           </div>
 
-          {/* Divider */}
-          <div className="mt-6">
+          {/* Divider - Hidden for now */}
+          {/* <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-600" />
@@ -217,10 +217,10 @@ export default function LoginPage() {
                 <span className="px-2 bg-gray-800 text-gray-400">Or continue with</span>
               </div>
             </div>
-          </div>
+          </div> */}
 
-          {/* OAuth Buttons */}
-          <div className="mt-6 grid grid-cols-2 gap-3">
+          {/* OAuth Buttons - Hidden for now */}
+          {/* <div className="mt-6 grid grid-cols-2 gap-3">
             <button
               onClick={() => handleOAuthSignIn('google')}
               disabled={isLoading}
@@ -238,7 +238,7 @@ export default function LoginPage() {
               <FiGithub className="h-5 w-5" />
               <span className="ml-2">GitHub</span>
             </button>
-          </div>
+          </div> */}
 
           {/* Development Debug Link */}
           {process.env.NODE_ENV === 'development' && (

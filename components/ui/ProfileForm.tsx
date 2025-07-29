@@ -70,8 +70,8 @@ export default function ProfileForm({ user, profile, onProfileUpdate }: ProfileF
   }, [message]);
 
   return (
-    <div className="bg-dark-800 rounded-lg p-6 border border-dark-600">
-      <h2 className="text-xl font-semibold text-gray-100 mb-6">Profile Settings</h2>
+    <div className="p-6" style={{ backgroundColor: '#1B1B1B', border: '1px solid #404040', borderRadius: '8px' }}>
+      <h2 className="text-xl font-semibold text-white mb-6">Profile Settings</h2>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Avatar Section */}
@@ -83,9 +83,9 @@ export default function ProfileForm({ user, profile, onProfileUpdate }: ProfileF
           />
           
           <div>
-            <p className="text-sm font-medium text-gray-200">Profile Picture</p>
-            <p className="text-xs text-gray-400">Auto-generated from your name</p>
-            <p className="text-xs text-gray-500">Colorful and unique to you!</p>
+            <p className="text-sm font-medium text-white">Profile Picture</p>
+            <p className="text-xs" style={{ color: '#979797' }}>Auto-generated from your name</p>
+            <p className="text-xs" style={{ color: '#5E5E5E' }}>Consistent gray styling for all users</p>
           </div>
         </div>
 
@@ -108,7 +108,7 @@ export default function ProfileForm({ user, profile, onProfileUpdate }: ProfileF
 
         {/* Username Field */}
         <div>
-          <label htmlFor="username" className="block text-sm font-medium text-gray-200 mb-2">
+          <label htmlFor="username" className="block text-sm font-medium text-white mb-2">
             Username
           </label>
           <input
@@ -118,14 +118,16 @@ export default function ProfileForm({ user, profile, onProfileUpdate }: ProfileF
             value={formData.username}
             onChange={handleInputChange}
             placeholder="Enter your username"
-            className="w-full px-3 py-2 bg-dark-700 border border-dark-600 rounded-lg text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full px-3 py-2 text-white focus:outline-none" style={{ backgroundColor: '#232323', border: '1px solid #404040', borderRadius: '8px' }}
+            onFocus={(e) => e.currentTarget.style.borderColor = '#FFFC74'}
+            onBlur={(e) => e.currentTarget.style.borderColor = '#404040'}
           />
-          <p className="text-xs text-gray-400 mt-1">This will be displayed to other users</p>
+          <p className="text-xs mt-1" style={{ color: '#979797' }}>This will be displayed to other users</p>
         </div>
 
         {/* Email Field (Read-only) */}
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-200 mb-2">
+          <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
             Email
           </label>
           <input
@@ -133,18 +135,19 @@ export default function ProfileForm({ user, profile, onProfileUpdate }: ProfileF
             id="email"
             value={user.email || ''}
             readOnly
-            className="w-full px-3 py-2 bg-dark-600 border border-dark-500 rounded-lg text-gray-300 cursor-not-allowed"
+            className="w-full px-3 py-2 cursor-not-allowed" style={{ backgroundColor: '#5E5E5E', border: '1px solid #404040', borderRadius: '8px', color: '#979797' }}
           />
-          <p className="text-xs text-gray-400 mt-1">Email cannot be changed</p>
+          <p className="text-xs mt-1" style={{ color: '#979797' }}>Email cannot be changed</p>
         </div>
 
         {/* Message Display */}
         {message && (
-          <div className={`p-3 rounded-lg text-sm ${
-            message.type === 'success' 
-              ? 'bg-green-900 border border-green-700 text-green-200' 
-              : 'bg-red-900 border border-red-700 text-red-200'
-          }`}>
+          <div className="p-3 text-sm" style={{
+            backgroundColor: message.type === 'success' ? '#1B1B1B' : '#1B1B1B',
+            border: `1px solid ${message.type === 'success' ? '#22c55e' : '#ef4444'}`,
+            borderRadius: '8px',
+            color: message.type === 'success' ? '#22c55e' : '#ef4444'
+          }}>
             {message.text}
           </div>
         )}
@@ -153,7 +156,10 @@ export default function ProfileForm({ user, profile, onProfileUpdate }: ProfileF
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-primary hover:bg-primary-dark text-dark-900 font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+          className="w-full font-medium py-2 px-4 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+          style={{ backgroundColor: isLoading ? '#5E5E5E' : '#FFFC74', color: '#000000', borderRadius: '8px' }}
+          onMouseEnter={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#fef9c3')}
+          onMouseLeave={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#FFFC74')}
         >
           {isLoading ? (
             <>

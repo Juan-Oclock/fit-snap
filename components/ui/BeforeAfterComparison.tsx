@@ -92,8 +92,8 @@ export default function BeforeAfterComparison({ userId }: BeforeAfterComparisonP
 
   if (loading) {
     return (
-      <div className="card">
-        <h2 className="text-xl font-semibold mb-4">Before & After Photos</h2>
+      <div className="py-6 px-2" style={{ backgroundColor: '#1B1B1B', border: '1px solid #404040', borderRadius: '8px' }}>
+        <h2 className="text-lg font-semibold text-white mb-6 px-4">BEFORE & AFTER PHOTOS</h2>
         <div className="flex justify-center py-8">
           <LoadingSpinner />
         </div>
@@ -102,17 +102,20 @@ export default function BeforeAfterComparison({ userId }: BeforeAfterComparisonP
   }
 
   return (
-    <div className="card">
-      <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
-        <Camera className="w-5 h-5" />
-        Before & After Photos
-      </h2>
+    <div className="py-6 px-2" style={{ backgroundColor: '#1B1B1B', border: '1px solid #404040', borderRadius: '8px' }}>
+      <h2 className="text-lg font-semibold text-white mb-6 px-4">BEFORE & AFTER PHOTOS</h2>
       
-      <div className="grid grid-cols-2 gap-4 md:gap-6">
+      <div className="grid grid-cols-2 gap-1">
         {/* Before Photo - Left Side */}
         <div className="space-y-3">
-          <h3 className="text-lg font-medium text-center text-blue-400">Before</h3>
-          <div className="relative aspect-[3/4] bg-gray-700 rounded-lg overflow-hidden group">
+          <div className="relative aspect-[2/3] overflow-hidden group" style={{ backgroundColor: '#232323', borderRadius: '8px' }}>
+            {/* Before Label */}
+            <div className="absolute top-2 left-2 right-2 z-10">
+              <div className="px-3 py-1" style={{ backgroundColor: 'rgba(27, 27, 27, 0.8)', borderRadius: '8px' }}>
+                <h3 className="text-white font-medium text-sm">Before</h3>
+              </div>
+            </div>
+            
             {photos.before ? (
               <>
                 <img
@@ -123,15 +126,13 @@ export default function BeforeAfterComparison({ userId }: BeforeAfterComparisonP
                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200 flex items-center justify-center">
                   <button
                     onClick={triggerFileInput}
-                    className="opacity-0 group-hover:opacity-100 transition-opacity bg-primary text-gray-900 px-3 py-2 rounded-lg font-medium flex items-center gap-2"
+                    className="opacity-0 group-hover:opacity-100 transition-opacity px-3 py-2 font-medium flex items-center gap-2"
+                    style={{ backgroundColor: '#FFFC74', color: '#000000', borderRadius: '8px' }}
                     disabled={uploading === 'before'}
                   >
                     <Upload className="w-4 h-4" />
                     Update
                   </button>
-                </div>
-                <div className="absolute bottom-2 left-2 right-2 text-xs text-white bg-black bg-opacity-50 rounded px-2 py-1">
-                  {formatDate(photos.before.taken_at)}
                 </div>
               </>
             ) : (
@@ -139,23 +140,26 @@ export default function BeforeAfterComparison({ userId }: BeforeAfterComparisonP
                 {uploading === 'before' ? (
                   <div className="space-y-3">
                     <LoadingSpinner />
-                    <p className="text-sm text-gray-400">Uploading... {uploadProgress}%</p>
-                    <div className="w-full bg-gray-600 rounded-full h-2">
+                    <p className="text-sm" style={{ color: '#979797' }}>Uploading... {uploadProgress}%</p>
+                    <div className="w-full h-2 rounded-full" style={{ backgroundColor: '#404040' }}>
                       <div
-                        className="bg-primary h-2 rounded-full transition-all duration-300"
-                        style={{ width: `${uploadProgress}%` }}
+                        className="h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${uploadProgress}%`, backgroundColor: '#FFFC74' }}
                       />
                     </div>
                   </div>
                 ) : (
                   <>
-                    <Camera className="w-12 h-12 text-gray-400 mb-3" />
-                    <p className="text-gray-400 mb-3 text-sm">
+                    <Camera className="w-12 h-12 mb-3" style={{ color: '#979797' }} />
+                    <p className="mb-3 text-sm" style={{ color: '#979797' }}>
                       Upload a before photo to track your transformation
                     </p>
                     <button
                       onClick={triggerFileInput}
-                      className="btn-secondary text-sm flex items-center gap-2"
+                      className="text-sm flex items-center gap-2 px-4 py-2 transition-colors"
+                      style={{ backgroundColor: '#232323', color: '#FFFFFF', border: '1px solid #404040', borderRadius: '8px' }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#404040'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#232323'}
                     >
                       <Upload className="w-4 h-4" />
                       Upload Photo
@@ -165,12 +169,25 @@ export default function BeforeAfterComparison({ userId }: BeforeAfterComparisonP
               </div>
             )}
           </div>
+          
+          {/* Photo Caption */}
+          {photos.before && (
+            <p className="text-xs" style={{ color: '#979797' }}>
+              Uploaded {formatDate(photos.before.taken_at)}
+            </p>
+          )}
         </div>
 
         {/* After Photo - Right Side */}
         <div className="space-y-3">
-          <h3 className="text-lg font-medium text-center text-green-400">After</h3>
-          <div className="relative aspect-[3/4] bg-gray-700 rounded-lg overflow-hidden group">
+          <div className="relative aspect-[2/3] overflow-hidden group" style={{ backgroundColor: '#232323', borderRadius: '8px' }}>
+            {/* After Label */}
+            <div className="absolute top-2 left-2 right-2 z-10">
+              <div className="px-3 py-1" style={{ backgroundColor: 'rgba(27, 27, 27, 0.8)', borderRadius: '8px' }}>
+                <h3 className="text-white font-medium text-sm">After</h3>
+              </div>
+            </div>
+            
             {photos.after ? (
               <>
                 <img
@@ -178,17 +195,11 @@ export default function BeforeAfterComparison({ userId }: BeforeAfterComparisonP
                   alt="After photo"
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute bottom-2 left-2 right-2 text-xs text-white bg-black bg-opacity-50 rounded px-2 py-1">
-                  <div className="flex justify-between items-center">
-                    <span>{formatDate(photos.after.taken_at)}</span>
-                    <span className="text-yellow-400 text-xs">From workout</span>
-                  </div>
-                </div>
               </>
             ) : (
               <div className="flex flex-col items-center justify-center h-full text-center p-4">
-                <Camera className="w-12 h-12 text-gray-400 mb-3" />
-                <p className="text-gray-400 mb-3 text-sm">
+                <Camera className="w-12 h-12 mb-3" style={{ color: '#979797' }} />
+                <p className="mb-3 text-sm" style={{ color: '#979797' }}>
                   Your latest workout photo will appear here automatically
                 </p>
                 <p className="text-xs text-gray-500 mb-3">
@@ -204,14 +215,21 @@ export default function BeforeAfterComparison({ userId }: BeforeAfterComparisonP
               </div>
             )}
           </div>
+          
+          {/* Photo Caption */}
+          {photos.after && (
+            <p className="text-xs" style={{ color: '#979797' }}>
+              Uploaded From Workout {formatDate(photos.after.taken_at)}
+            </p>
+          )}
         </div>
       </div>
 
       {/* Progress message */}
       {photos.before && photos.after && (
-        <div className="mt-6 p-4 bg-primary bg-opacity-10 border border-primary border-opacity-20 rounded-lg">
-          <p className="text-center text-primary font-medium">
-            🎉 Great job tracking your progress! Keep up the amazing work!
+        <div className="mt-6">
+          <p className="text-center" style={{ fontSize: '14px', color: '#979797' }}>
+            Great job tracking your progress! Keep up the amazing work!
           </p>
         </div>
       )}

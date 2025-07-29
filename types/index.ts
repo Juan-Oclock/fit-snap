@@ -19,6 +19,21 @@ export type Workout = {
   photo_url?: string;
 };
 
+export type WorkoutWithExercises = Workout & {
+  workout_exercises: {
+    id: string;
+    exercise_id: string;
+    order_index: number;
+    exercises: {
+      name: string;
+    };
+    workout_sets: {
+      reps: number;
+      weight?: number;
+    }[];
+  }[];
+};
+
 export type Exercise = {
   id: string;
   name: string;

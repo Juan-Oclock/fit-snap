@@ -3,12 +3,14 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import Image from 'next/image';
 import { 
   FiHome, FiActivity, FiList, FiClock, 
-  FiBarChart2, FiUsers, FiSettings, FiLock, FiMenu, FiX, FiPlus, FiLogOut
+  FiBarChart2, FiUsers, FiSettings, FiLock, FiMenu, FiX, FiPlus, FiPlusCircle, FiLogOut
 } from 'react-icons/fi';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigationGuard } from '@/contexts/NavigationGuardContext';
+import { UserAvatar } from '@/components/ui/UserAvatar';
 
 type NavItem = {
   path: string;
@@ -29,10 +31,10 @@ export default function Sidebar() {
   const navItems: NavItem[] = [
     { path: '/dashboard', label: 'Dashboard', icon: <FiHome size={20} />, mobileShow: true },
     { path: '/exercises', label: 'Exercises', icon: <FiActivity size={20} />, mobileShow: true },
-    { path: '/workout', label: 'New Workout', icon: <FiPlus size={20} />, mobileShow: true, highlight: true },
-    { path: '/history', label: 'History', icon: <FiClock size={20} />, mobileShow: true },
+    { path: '/workout', label: 'New Workout', icon: <FiPlusCircle size={24} />, mobileShow: true },
+    { path: '/community', label: 'Community', icon: <FiUsers size={20} />, mobileShow: true },
     { path: '/progress', label: 'Progress', icon: <FiBarChart2 size={20} /> },
-    { path: '/community', label: 'Community', icon: <FiUsers size={20} /> },
+    { path: '/history', label: 'History', icon: <FiClock size={20} /> },
     { path: '/settings', label: 'Settings', icon: <FiSettings size={20} />, mobileShow: true },
     { path: '/admin', label: 'Admin', icon: <FiLock size={20} />, adminOnly: true },
     // Sign out option doesn't have a path since it's an action, not a route
@@ -49,21 +51,31 @@ export default function Sidebar() {
   return (
     <>
       {/* Mobile Menu Button */}
-      {/* Mobile Header Background */}
-      <div className="fixed top-0 left-0 right-0 h-16 bg-gray-900 z-20 md:hidden" />
+
       
-      <button 
-        onClick={toggleSidebar} 
-        className="fixed top-4 left-4 z-40 p-2 rounded-md text-white bg-gray-800 hover:bg-gray-700 md:hidden transition-colors"
-        aria-label="Toggle menu"
-      >
-        {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
-      </button>
-      
-      {/* App Logo (Mobile) */}
-      <div className="fixed top-4 left-16 z-30 md:hidden flex items-center">
-        <div className="bg-purple-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">O</div>
-        <span className="ml-2 font-bold text-lg text-white">FitTracker</span>
+      {/* Top Header Bar */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 py-3" style={{ backgroundColor: '#272727' }}>
+        <div className="flex items-center space-x-3">
+          <button 
+            onClick={toggleSidebar} 
+            className="p-2 rounded-md text-white hover:bg-gray-700 transition-colors"
+            aria-label="Toggle menu"
+          >
+            {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+          </button>
+          
+          {/* User Avatar */}
+          <UserAvatar 
+            name={user?.user_metadata?.full_name}
+            username={user?.user_metadata?.username}
+            size="sm"
+          />
+        </div>
+        
+        {/* App Logo (Right side) */}
+        <div className="flex items-center">
+          <span className="font-bold text-lg" style={{ color: '#FFFC74' }}>FitSnap</span>
+        </div>
       </div>
       
       {/* Sidebar for Mobile (Slide-in) */}
@@ -73,8 +85,7 @@ export default function Sidebar() {
       >
         <div className="p-4 pt-16">
           <div className="flex items-center mb-8 pl-4">
-            <div className="bg-purple-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">O</div>
-            <span className="ml-2 font-bold text-lg">FitTracker</span>
+            <span className="font-bold text-lg" style={{ color: '#FFFC74' }}>FitSnap</span>
           </div>
           <nav className="space-y-1">
             {filteredNavItems.map((item) => (
@@ -116,8 +127,7 @@ export default function Sidebar() {
       <div className="hidden md:flex md:flex-col md:fixed md:inset-y-0 md:w-64 md:z-10 bg-dark-800 border-r border-dark-700">
         <div className="p-4">
           <div className="flex items-center mb-8 pl-4">
-            <div className="bg-purple-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">O</div>
-            <span className="ml-2 font-bold text-lg">FitTracker</span>
+            <span className="font-bold text-lg" style={{ color: '#FFFC74' }}>FitSnap</span>
           </div>
           <nav className="space-y-1">
             {filteredNavItems.map((item) => (
@@ -136,12 +146,8 @@ export default function Sidebar() {
                   onClick={() => guardedNavigate(item.path)}
                   className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors w-full text-left ${
                     pathname === item.path || pathname.startsWith(item.path + '/')
-                      ? item.highlight
-                        ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-black font-bold shadow-lg'
-                        : 'bg-yellow-500 text-black font-medium'
-                      : item.highlight
-                        ? 'bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-400 font-semibold border border-yellow-500/30 hover:from-yellow-500/30 hover:to-orange-500/30'
-                        : 'text-gray-300 hover:bg-dark-700'
+                      ? 'bg-yellow-500 text-black font-medium'
+                      : 'text-gray-300 hover:bg-dark-700'
                   }`}
                 >
                   <span>{item.icon}</span>
@@ -154,7 +160,7 @@ export default function Sidebar() {
       </div>
       
       {/* Mobile Bottom Navigation */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-dark-800 border-t border-dark-700 flex justify-around py-2">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-dark-700 flex justify-around py-2" style={{ backgroundColor: '#272727' }}>
         {filteredNavItems
           .filter(item => item.mobileShow)
           .map((item) => (

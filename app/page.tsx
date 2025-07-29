@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { Target, TrendingUp, Users, Camera, BarChart3, Trophy } from 'lucide-react';
 
 export default function HomePage() {
   const { user, loading } = useAuth();
@@ -15,92 +16,166 @@ export default function HomePage() {
       router.push('/dashboard');
     }
   }, [user, loading, router]);
-  
-  // Add CSS class directly to body to ensure styles apply
-  useEffect(() => {
-    document.body.classList.add('dark:bg-dark-900');
-    return () => document.body.classList.remove('dark:bg-dark-900');
-  }, []);
+
   return (
-    <div className="min-h-screen bg-dark-900 text-white" style={{ backgroundColor: '#121212', color: '#fff', minHeight: '100vh' }}>
-      <div className="container mx-auto px-4 py-16">
-        <header className="flex justify-between items-center mb-16">
-          <h1 className="text-2xl font-bold text-yellow-500">FitSnap</h1>
-          <div className="space-x-4">
-            <Link href="/login" className="px-4 py-2 rounded-md border border-yellow-500 text-yellow-500 hover:bg-yellow-500/10 transition-colors">
-              Login
-            </Link>
-            <Link href="/register" className="px-4 py-2 rounded-md bg-yellow-500 text-black hover:bg-yellow-600 transition-colors">
-              Sign Up
-            </Link>
+    <div className="min-h-screen text-white" style={{ backgroundColor: '#151515' }}>
+      {/* Header */}
+      <header style={{ backgroundColor: '#1B1B1B', borderBottom: '1px solid #404040' }}>
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex justify-between items-center">
+            <div className="text-2xl font-bold" style={{ color: '#FFFC74' }}>FitSnap</div>
+            {/* Navigation links - Hidden for now */}
+            {/* <nav className="hidden md:flex space-x-8">
+              <a href="#" className="hover:text-white transition-colors" style={{ color: '#979797' }}>Home</a>
+              <a href="#" className="hover:text-white transition-colors" style={{ color: '#979797' }}>Features</a>
+              <a href="#" className="hover:text-white transition-colors" style={{ color: '#979797' }}>Pricing</a>
+              <a href="#" className="hover:text-white transition-colors" style={{ color: '#979797' }}>About</a>
+            </nav> */}
+            <div className="flex space-x-4">
+              <Link href="/login" className="px-4 py-2 hover:text-white transition-colors" style={{ color: '#979797' }}>
+                Login
+              </Link>
+              <Link href="/register" className="px-4 py-2 text-black rounded hover:opacity-90 transition-colors" style={{ backgroundColor: '#FFFC74' }}>
+                Sign Up
+              </Link>
+            </div>
           </div>
-        </header>
+        </div>
+      </header>
 
-        <main className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center gap-12">
-            <div className="md:w-1/2 space-y-6">
-              <h2 className="text-4xl md:text-5xl font-bold leading-tight">
-                Track Your Fitness Journey <span className="text-yellow-500">Visually</span>
+      {/* Hero Section */}
+      <section 
+        className="text-white py-24 relative bg-cover bg-center bg-no-repeat" 
+        style={{ 
+          backgroundImage: 'url("https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80")',
+        }}
+      >
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-black bg-opacity-75"></div>
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
+            Elevate Your Fitness Journey<br />with FitSnap
+          </h1>
+          <p className="text-xl mb-8 max-w-2xl mx-auto" style={{ color: '#979797' }}>
+            An all-in-one fitness tracking app that helps you monitor your workouts, track your progress, and stay motivated with a supportive community.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/register" className="px-8 py-3 text-black rounded font-medium hover:opacity-90 transition-colors" style={{ backgroundColor: '#FFFC74' }}>
+              Get Started
+            </Link>
+            <button className="px-8 py-3 text-white rounded hover:opacity-80 transition-colors" style={{ border: '1px solid #FFFC74', color: '#FFFC74' }}>
+              Learn More
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-16" style={{ backgroundColor: '#1B1B1B' }}>
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12 text-white">
+            Your Fitness Journey Starts
+          </h2>
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <div className="p-6 rounded-lg" style={{ backgroundColor: '#232323', border: '1px solid #404040' }}>
+              <div className="w-12 h-12 rounded-lg mb-4 flex items-center justify-center" style={{ backgroundColor: '#404040' }}>
+                <Target className="w-6 h-6" style={{ color: '#FFFC74' }} />
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-white">Achieve Your Workout Goals</h3>
+              <p className="mb-4" style={{ color: '#979797' }}>
+                Set and track your fitness goals with our comprehensive workout planning tools.
+              </p>
+              <a href="#" className="font-medium hover:text-white transition-colors" style={{ color: '#FFFC74' }}>
+                Read more →
+              </a>
+            </div>
+            <div className="p-6 rounded-lg" style={{ backgroundColor: '#232323', border: '1px solid #404040' }}>
+              <div className="w-12 h-12 rounded-lg mb-4 flex items-center justify-center" style={{ backgroundColor: '#404040' }}>
+                <TrendingUp className="w-6 h-6" style={{ color: '#FFFC74' }} />
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-white">Maximize Your Workout Efficiency</h3>
+              <p className="mb-4" style={{ color: '#979797' }}>
+                Optimize your training with data-driven insights and personalized recommendations.
+              </p>
+              <a href="#" className="font-medium hover:text-white transition-colors" style={{ color: '#FFFC74' }}>
+                Read more →
+              </a>
+            </div>
+            <div className="p-6 rounded-lg" style={{ backgroundColor: '#232323', border: '1px solid #404040' }}>
+              <div className="w-12 h-12 rounded-lg mb-4 flex items-center justify-center" style={{ backgroundColor: '#404040' }}>
+                <BarChart3 className="w-6 h-6" style={{ color: '#FFFC74' }} />
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-white">Track Your Progress Effectively</h3>
+              <p className="mb-4" style={{ color: '#979797' }}>
+                Monitor your improvements with detailed analytics and progress visualization.
+              </p>
+              <a href="#" className="font-medium hover:text-white transition-colors" style={{ color: '#FFFC74' }}>
+                Read more →
+              </a>
+            </div>
+          </div>
+          <div className="text-center">
+            <button className="px-6 py-3 text-black rounded hover:opacity-90 transition-colors" style={{ backgroundColor: '#FFFC74' }}>
+              View All
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Content Section */}
+      <section className="py-20" style={{ backgroundColor: '#151515' }}>
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+            <div>
+              <h2 className="text-3xl font-bold mb-6 text-white">
+                Transform Your Fitness Journey with Smart Tracking
               </h2>
-              <p className="text-lg text-gray-300">
-                FitSnap helps you track workouts, measure progress with photos, and stay motivated
-                with a supportive community.
+              <p className="mb-8 leading-relaxed" style={{ color: '#979797' }}>
+                Take control of your fitness with comprehensive workout tracking, progress monitoring, and personal records. FitSnap helps you stay motivated with detailed analytics, photo comparisons, and a supportive community of fitness enthusiasts.
               </p>
-              <div className="pt-4 flex flex-col sm:flex-row gap-4">
-                <Link href="/dashboard" className="px-4 py-3 rounded-md bg-yellow-500 text-black font-medium hover:bg-yellow-600 transition-colors text-center">
-                  Get Started
-                </Link>
-                <button className="px-4 py-3 rounded-md border border-yellow-500 text-yellow-500 hover:bg-yellow-500/10 transition-colors">
-                  Learn More
-                </button>
+            </div>
+            <div className="rounded-lg aspect-[4/3] overflow-hidden" style={{ border: '1px solid #404040' }}>
+              <img 
+                src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                alt="Person working out with dumbbells in a modern gym"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
+      <section className="py-20" style={{ backgroundColor: '#232323' }}>
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-4xl font-bold mb-6 text-white">
+            Empowering your fitness journey, one<br />workout at a time.
+          </h2>
+          <p className="text-xl mb-8 max-w-2xl mx-auto" style={{ color: '#979797' }}>
+            At FitSnap, we believe in making fitness accessible and enjoyable for everyone. Our platform is designed to help you achieve your goals through consistent tracking and community support.
+          </p>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-12" style={{ backgroundColor: '#1B1B1B', borderTop: '1px solid #404040' }}>
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+            <div className="mb-8 md:mb-0">
+              <div className="text-2xl font-bold mb-4" style={{ color: '#FFFC74' }}>FitSnap</div>
+            </div>
+            <div className="flex flex-col md:flex-row gap-8">
+              <div className="flex gap-6">
+                <Link href="/privacy" className="hover:text-white transition-colors" style={{ color: '#979797' }}>Privacy Policy</Link>
+                <Link href="/terms" className="hover:text-white transition-colors" style={{ color: '#979797' }}>Terms of Service</Link>
               </div>
             </div>
-
-            <div className="md:w-1/2 bg-dark-800 rounded-xl p-6 aspect-[4/3]">
-              <div className="h-full w-full flex items-center justify-center">
-                <p className="text-gray-500">App Screenshot Placeholder</p>
-              </div>
-            </div>
           </div>
-
-          <div className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="p-6 rounded-lg bg-dark-800 hover:bg-dark-700 transition-colors border border-dark-700">
-              <div className="text-yellow-500 text-3xl mb-4">📊</div>
-              <h3 className="text-xl font-semibold mb-2">Track Progress</h3>
-              <p className="text-gray-300">
-                Log workouts, track PRs, and see your improvement over time with easy-to-read charts.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-lg bg-dark-800 hover:bg-dark-700 transition-colors border border-dark-700">
-              <div className="text-yellow-500 text-3xl mb-4">📸</div>
-              <h3 className="text-xl font-semibold mb-2">Visual Tracking</h3>
-              <p className="text-gray-300">
-                Upload before and after photos to visually track your transformation journey.
-              </p>
-            </div>
-
-            <div className="p-6 rounded-lg bg-dark-800 hover:bg-dark-700 transition-colors border border-dark-700">
-              <div className="text-yellow-500 text-3xl mb-4">👥</div>
-              <h3 className="text-xl font-semibold mb-2">Community</h3>
-              <p className="text-gray-300">
-                Connect with others, share achievements, and stay motivated with community features.
-              </p>
-            </div>
+          <div className="mt-8 pt-8 text-center" style={{ borderTop: '1px solid #404040', color: '#979797' }}>
+            <p>© 2025 FitSnap. Made with love and dedication by <a href="https://www.instagram.com/juan_oclock11/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors" style={{ color: '#FFFC74' }}>Juan Oclock</a></p>
           </div>
-        </main>
-
-        <footer className="mt-24 border-t border-dark-700 pt-8 text-sm text-gray-500">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p>© 2025 FitSnap. All rights reserved.</p>
-            <div className="flex gap-6 mt-4 md:mt-0">
-              <a href="#" className="hover:text-yellow-500">Privacy</a>
-              <a href="#" className="hover:text-yellow-500">Terms</a>
-              <a href="#" className="hover:text-yellow-500">Contact</a>
-            </div>
-          </div>
-        </footer>
-      </div>
+        </div>
+      </footer>
     </div>
   );
 }

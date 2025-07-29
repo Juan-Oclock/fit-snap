@@ -13,25 +13,32 @@ export default function ProgressPage() {
 
   if (userLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <LoadingSpinner />
+      <div className="container-app">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <LoadingSpinner />
+            <p className="mt-4" style={{ color: '#979797' }}>Loading progress...</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-gray-400">Please log in to view your progress.</p>
+      <div className="container-app">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <p style={{ color: '#979797' }}>Please log in to view your progress.</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Progress Tracking</h1>
-        <p className="text-gray-400">
+    <div className="container-app space-y-6">
+      <div className="space-y-2">
+        <h1 className="text-heading">PROGRESS TRACKING</h1>
+        <p className="text-subheading">
           Track your fitness journey with goals, photos, and personal records
         </p>
       </div>
