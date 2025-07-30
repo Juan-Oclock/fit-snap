@@ -2,6 +2,66 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes slide-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutDown {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes timerPulse {
+  0%, 100% {
+    border-color: rgb(107, 114, 128); /* gray-500 */
+    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.4); /* yellow-400 with opacity */
+  }
+  50% {
+    border-color: rgb(251, 191, 36); /* yellow-400 */
+    box-shadow: 0 0 0 8px rgba(251, 191, 36, 0.1);
+  }
+}
+
+.animate-slide-in-up {
+  animation: slide-in-up 0.4s cubic-bezier(0.4,0,0.2,1) both;
+}
+
+.animate-slide-in-up-alt {
+  animation: slideInUp 0.3s ease-out;
+}
+
+.animate-slide-out-down {
+  animation: slideOutDown 0.3s ease-in;
+}
+
+.animate-timer-pulse {
+  animation: timerPulse 2s ease-in-out infinite;
+}
+
 :root {
   --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 21, 21, 21;

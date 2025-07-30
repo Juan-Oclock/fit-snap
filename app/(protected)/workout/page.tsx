@@ -9,6 +9,7 @@ import { searchExercises, saveWorkout, uploadWorkoutPhoto, getUserRestTime } fro
 import { getUserCommunitySharing } from '@/lib/settings';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigationGuard } from '@/contexts/NavigationGuardContext';
+import ExerciseTimerModal from '@/components/ui/ExerciseTimerModal';
 
 interface Exercise {
   id: string;
@@ -43,6 +44,86 @@ interface WorkoutExercise {
 }
 
 export default function WorkoutPage() {
+  // --- Timer Modal State ---
+  const [isTimerModalOpen, setIsTimerModalOpen] = useState(false);
+  const [timerModalExerciseId, setTimerModalExerciseId] = useState<string | null>(null);
+  // --- In-Modal Rest State ---
+  const [isResting, setIsResting] = useState(false);
+  const [restTimer, setRestTimer] = useState(0);
+  const restIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // In-modal rest handlers
+  const wasTimerRunningRef = useRef(false);
+
+  const handleRest = () => {
+    if (timerModalExerciseId) {
+      // Pause the timer for the modal exercise if running
+      const exercise = workoutExercises.find(ex => ex.id === timerModalExerciseId);
+      if (exercise && exercise.isTimerRunning) {
+        wasTimerRunningRef.current = true;
+        // Stop interval
+        const interval = timerIntervalsRef.current.get(timerModalExerciseId);
+        if (interval) {
+          clearInterval(interval);
+          timerIntervalsRef.current.delete(timerModalExerciseId);
+        }
+        setWorkoutExercises(prev => prev.map(ex =>
+          ex.id === timerModalExerciseId ? { ...ex, isTimerRunning: false } : ex
+        ));
+      } else {
+        wasTimerRunningRef.current = false;
+      }
+    }
+    setIsResting(true);
+    setRestTimer(userRestTime);
+    if (restIntervalRef.current) clearInterval(restIntervalRef.current);
+    restIntervalRef.current = setInterval(() => {
+      setRestTimer(prev => {
+        if (prev <= 1) {
+          clearInterval(restIntervalRef.current!);
+          setIsResting(false);
+          // Resume timer if it was running before rest
+          if (timerModalExerciseId && wasTimerRunningRef.current) {
+            // Start the timer interval again
+            const interval = setInterval(() => {
+              setWorkoutExercises(current => current.map(e =>
+                e.id === timerModalExerciseId ? { ...e, timerSeconds: e.timerSeconds + 1 } : e
+              ));
+            }, 1000);
+            timerIntervalsRef.current.set(timerModalExerciseId, interval);
+            setWorkoutExercises(prev => prev.map(ex =>
+              ex.id === timerModalExerciseId ? { ...ex, isTimerRunning: true } : ex
+            ));
+          }
+          wasTimerRunningRef.current = false;
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  const onCancelRest = () => {
+    setIsResting(false);
+    setRestTimer(0);
+    if (restIntervalRef.current) clearInterval(restIntervalRef.current);
+    // Resume timer if it was running before rest
+    if (timerModalExerciseId && wasTimerRunningRef.current) {
+      const interval = setInterval(() => {
+        setWorkoutExercises(current => current.map(e =>
+          e.id === timerModalExerciseId ? { ...e, timerSeconds: e.timerSeconds + 1 } : e
+        ));
+      }, 1000);
+      timerIntervalsRef.current.set(timerModalExerciseId, interval);
+      setWorkoutExercises(prev => prev.map(ex =>
+        ex.id === timerModalExerciseId ? { ...ex, isTimerRunning: true } : ex
+      ));
+    }
+    wasTimerRunningRef.current = false;
+  };
+
+
+
   const router = useRouter();
   const supabase = createClientComponentClient();
   const { user } = useAuth();
@@ -66,6 +147,7 @@ export default function WorkoutPage() {
   // Photo confirmation dialog state
   const [showPhotoConfirmDialog, setShowPhotoConfirmDialog] = useState(false);
   const [highlightPhotoSection, setHighlightPhotoSection] = useState(false);
+  const [showPhotoSection, setShowPhotoSection] = useState(false);
   
   // Persistent completed sets that survive exercise removal
   const [persistentCompletedSets, setPersistentCompletedSets] = useState<Array<CompletedSet & { exerciseName: string, exerciseId: string, databaseExerciseId: string }>>([]);
@@ -746,6 +828,8 @@ export default function WorkoutPage() {
               <button
                 onClick={() => {
                   setShowPhotoConfirmDialog(false);
+                  // Show photo section
+                  setShowPhotoSection(true);
                   // Highlight photo section and scroll to it
                   setHighlightPhotoSection(true);
                   // Scroll to photo section
@@ -882,199 +966,215 @@ export default function WorkoutPage() {
 
         {/* Added Exercises */}
         {workoutExercises.map((workoutExercise, exerciseIndex) => (
-          <div key={workoutExercise.id} className="p-4 space-y-4" style={{ backgroundColor: '#1B1B1B', borderRadius: '8px' }}>
-            {/* Exercise Header */}
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-semibold text-white">
-                  {workoutExercise.exercise.name}
-                </h3>
-                <p className="text-sm" style={{ color: '#979797' }}>
-                  {workoutExercise.exercise.category} • {workoutExercise.exercise.equipment || 'No equipment'}
-                </p>
-              </div>
-              <button
-                onClick={() => removeExercise(workoutExercise.id)}
-                className="w-8 h-8 text-white flex items-center justify-center transition-colors" style={{ backgroundColor: '#dc2626', borderRadius: '50%' }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#b91c1c'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#dc2626'}
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
+  <div key={workoutExercise.id} className="p-4 space-y-4" style={{ backgroundColor: '#1B1B1B', borderRadius: '8px' }}>
+    {/* Exercise Header */}
+    <div className="flex items-center justify-between">
+      <div>
+        <h3 className="text-lg font-semibold text-white">
+          {workoutExercise.exercise.name}
+        </h3>
+        <p className="text-sm" style={{ color: '#979797' }}>
+          {workoutExercise.exercise.category} • {workoutExercise.exercise.equipment || 'No equipment'}
+        </p>
+      </div>
+      <button
+        onClick={() => removeExercise(workoutExercise.id)}
+        className="w-8 h-8 text-white flex items-center justify-center transition-colors" style={{ backgroundColor: '#dc2626', borderRadius: '50%' }}
+        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#b91c1c'}
+        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#dc2626'}
+      >
+        <X className="w-4 h-4" />
+      </button>
+    </div>
 
-            {/* Exercise Validation Message */}
-            {exerciseValidationErrors[workoutExercise.id] && (
-              <div className="p-3" style={{ backgroundColor: 'rgba(153, 27, 27, 0.5)', border: '1px solid #ef4444', borderRadius: '8px' }}>
-                <p className="text-sm" style={{ color: '#fca5a5' }}>
-                  {exerciseValidationErrors[workoutExercise.id]}
-                </p>
-              </div>
-            )}
+    {/* Exercise Validation Message */}
+    {exerciseValidationErrors[workoutExercise.id] && (
+      <div className="p-3" style={{ backgroundColor: 'rgba(153, 27, 27, 0.5)', border: '1px solid #ef4444', borderRadius: '8px' }}>
+        <p className="text-sm" style={{ color: '#fca5a5' }}>
+          {exerciseValidationErrors[workoutExercise.id]}
+        </p>
+      </div>
+    )}
 
-
-
-            {/* Current Set */}
-            <div className="space-y-2">
-              <div className="text-sm font-medium text-gray-300">Current Set</div>
-
-              {workoutExercise.sets.map((set, setIndex) => (
-                <div key={setIndex} className="flex items-center gap-3 bg-gray-700 p-3 rounded">
-                  <div className="text-sm text-gray-400 w-8">#{workoutExercise.currentSetNumber}</div>
-                  
-                  <div className="flex-1 grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-xs text-gray-400 mb-1">Reps</label>
-                      <input
-                        type="number"
-                        value={set.reps || ''}
-                        onChange={(e) => updateSet(workoutExercise.id, setIndex, 'reps', parseInt(e.target.value) || 0)}
-                        className="w-full px-2 py-1 bg-gray-600 border border-gray-500 rounded text-white text-center focus:outline-none focus:ring-1 focus:ring-yellow-400"
-                        min="0"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs text-gray-400 mb-1">Weight (kg)</label>
-                      <input
-                        type="number"
-                        value={set.weight || ''}
-                        onChange={(e) => updateSet(workoutExercise.id, setIndex, 'weight', parseFloat(e.target.value) || 0)}
-                        className="w-full px-2 py-1 bg-gray-600 border border-gray-500 rounded text-white text-center focus:outline-none focus:ring-1 focus:ring-yellow-400"
-                        min="0"
-                        step="0.5"
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Notification for this specific exercise if no valid sets */}
-            {!hasValidSetsForExercise(workoutExercise.id) && (
-              <div className="bg-blue-900/30 border border-blue-600/30 rounded-lg p-3 mb-3">
-                <div className="flex items-start space-x-2">
-                  <div className="text-blue-400 mt-0.5">
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-blue-300 text-sm font-medium">Timer Setup Required</p>
-                    <p className="text-blue-200 text-xs mt-1">
-                      Fill in reps and weight for at least one set to enable timers for this exercise.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Exercise Timer and Rest */}
-            <div className="flex items-center justify-between bg-gray-700 p-3 rounded">
-              <div className="flex items-center gap-3">
-                <Clock className="w-5 h-5 text-gray-400" />
-                <div className="text-2xl font-mono font-bold text-white">
-                  {formatTime(workoutExercise.timerSeconds)}
-                </div>
-                <button
-                  onClick={() => toggleTimer(workoutExercise.id)}
-                  disabled={!workoutExercise.isTimerRunning && !hasValidSetsForExercise(workoutExercise.id)}
-                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                    !workoutExercise.isTimerRunning && !hasValidSetsForExercise(workoutExercise.id)
-                      ? 'bg-gray-500 text-gray-300 cursor-not-allowed'
-                      : 'bg-yellow-400 text-black hover:bg-yellow-500'
-                  }`}
-                >
-                  {workoutExercise.isTimerRunning ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-                </button>
-                <button
-                  onClick={() => resetTimer(workoutExercise.id)}
-                  className="w-10 h-10 bg-gray-600 text-white rounded-full flex items-center justify-center hover:bg-gray-500 transition-colors"
-                >
-                  <RotateCcw className="w-5 h-5" />
-                </button>
-              </div>
-              <button
-                onClick={startRestTimer}
-                disabled={!hasAnyValidExercise()}
-                className={`px-4 py-2 rounded-lg transition-colors ${
-                  !hasAnyValidExercise()
-                    ? 'bg-gray-500 text-gray-300 cursor-not-allowed'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
-                }`}
-              >
-                Start Rest ({userRestTime}s)
-              </button>
-            </div>
-
-            {/* Exercise Notes */}
+    {/* Current Set */}
+    <div className="space-y-2">
+      <div className="text-sm font-medium text-gray-300">Current Set</div>
+      {workoutExercise.sets.map((set, setIndex) => (
+        <div
+          key={setIndex}
+          className={`flex items-center gap-3 p-3 rounded transition-all
+            ${hasValidSetsForExercise(workoutExercise.id)
+              ? 'bg-gray-700'
+              : 'bg-yellow-900/10 border-2 border-yellow-400 shadow-yellow-200 animate-pulse'}`}
+        >
+          <div className="text-sm text-gray-400 w-8">#{workoutExercise.currentSetNumber}</div>
+          <div className="flex-1 grid grid-cols-2 gap-3">
             <div>
-              <div className="text-sm font-medium text-gray-300 mb-2">Notes (Optional)</div>
-              <textarea
-                value={workoutExercise.notes}
-                onChange={(e) => setWorkoutExercises(prev => prev.map(ex => 
-                  ex.id === workoutExercise.id ? { ...ex, notes: e.target.value } : ex
-                ))}
-                placeholder="Add notes about this exercise..."
-                rows={3}
-                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent resize-none"
+              <label className="block text-xs text-gray-400 mb-1">Reps</label>
+              <input
+                type="number"
+                value={set.reps || ''}
+                onChange={(e) => updateSet(workoutExercise.id, setIndex, 'reps', parseInt(e.target.value) || 0)}
+                className="w-full px-2 py-1 bg-gray-600 border border-gray-500 rounded text-white text-center focus:outline-none focus:ring-1 focus:ring-yellow-400"
+                min="0"
               />
             </div>
-
-            {/* Exercise Done Button */}
-            <div className="flex justify-center">
-              <button
-                onClick={() => exerciseDone(workoutExercise.id)}
-                disabled={!workoutExercise.isTimerRunning}
-                className={`px-6 py-3 rounded-lg font-semibold transition-colors ${
-                  !workoutExercise.isTimerRunning
-                    ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                    : 'bg-green-600 text-white hover:bg-green-700'
-                }`}
-              >
-                Exercise Done
-              </button>
+            <div>
+              <label className="block text-xs text-gray-400 mb-1">Weight (kg)</label>
+              <input
+                type="number"
+                value={set.weight || ''}
+                onChange={(e) => updateSet(workoutExercise.id, setIndex, 'weight', parseFloat(e.target.value) || 0)}
+                className="w-full px-2 py-1 bg-gray-600 border border-gray-500 rounded text-white text-center focus:outline-none focus:ring-1 focus:ring-yellow-400"
+                min="0"
+                step="0.5"
+              />
             </div>
           </div>
+        </div>
+      ))}
+    </div>
+
+    {/* Notification for this specific exercise if no valid sets */}
+    {!hasValidSetsForExercise(workoutExercise.id) && (
+      <div className="bg-blue-900/30 border border-blue-600/30 rounded-lg p-3 mb-3">
+        <div className="flex items-start space-x-2">
+          <div className="text-blue-400 mt-0.5">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <div>
+            <p className="text-blue-300 text-sm font-medium">Timer Setup Required</p>
+            <p className="text-blue-200 text-xs mt-1">
+              Fill in reps and weight for at least one set to enable timers for this exercise.
+            </p>
+          </div>
+        </div>
+      </div>
+    )}
+
+    {/* Exercise Timer Modal Trigger */}
+    {hasValidSetsForExercise(workoutExercise.id) && (
+      <div className="flex flex-row items-center py-4 gap-4">
+        <button
+          onClick={() => {
+            // Auto-play: if timer not running, start it before opening modal
+            if (!workoutExercise.isTimerRunning) {
+              toggleTimer(workoutExercise.id);
+            }
+            setTimerModalExerciseId(workoutExercise.id);
+            setIsTimerModalOpen(true);
+          }}
+          className={`w-20 h-20 rounded-full flex items-center justify-center transition-colors shadow-lg
+            bg-yellow-400 text-black hover:bg-yellow-500 animate-pulse
+          `}
+          aria-label="Start Timer"
+        >
+          <Play className="w-10 h-10" />
+        </button>
+        <span className="flex items-center text-sm text-gray-400 ml-2">
+          <svg className="w-5 h-5 mr-1 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 19l-7-7 7-7" /></svg>
+          Click here to start timer
+        </span>
+      </div>
+    )}
+
+    {/* Exercise Notes */}
+    <div>
+      <div className="text-sm font-medium text-gray-300 mb-2">Notes (Optional)</div>
+      <textarea
+        value={workoutExercise.notes}
+        onChange={(e) => setWorkoutExercises(prev => prev.map(ex => 
+          ex.id === workoutExercise.id ? { ...ex, notes: e.target.value } : ex
         ))}
+        placeholder="Add notes about this exercise..."
+        rows={3}
+        className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent resize-none"
+      />
+    </div>
+  </div>
+))}
+
+{/* === EXERCISE TIMER MODAL === */}
+{isTimerModalOpen && timerModalExerciseId && (() => {
+  const exercise = workoutExercises.find(ex => ex.id === timerModalExerciseId);
+  if (!exercise) return null;
+  return (
+    <ExerciseTimerModal
+      isOpen={isTimerModalOpen}
+      onClose={() => {
+        setIsTimerModalOpen(false);
+        setTimerModalExerciseId(null);
+        setIsResting(false);
+        setRestTimer(0);
+        if (restIntervalRef.current) clearInterval(restIntervalRef.current);
+      }}
+      exerciseName={exercise.exercise.name}
+      reps={exercise.sets[0]?.reps || 0}
+      weight={exercise.sets[0]?.weight || 0}
+      sets={exercise.currentSetNumber}
+      timer={exercise.timerSeconds}
+      isRunning={exercise.isTimerRunning}
+      onPlayPause={() => !isResting && toggleTimer(exercise.id)}
+      onRest={handleRest}
+      onDone={() => {
+        exerciseDone(exercise.id);
+        setIsTimerModalOpen(false);
+        setTimerModalExerciseId(null);
+        setIsResting(false);
+        setRestTimer(0);
+        if (restIntervalRef.current) clearInterval(restIntervalRef.current);
+      }}
+      isResting={isResting}
+      restTimer={restTimer}
+      onCancelRest={onCancelRest}
+      userRestTime={userRestTime}
+    />
+  );
+})()}
+
 
         {/* Workout Photo */}
-        <div 
-          data-photo-section
-          className={`transition-all duration-500 rounded-lg p-4 ${
-            highlightPhotoSection 
-              ? 'bg-yellow-900/30 border-2 border-yellow-400 shadow-lg shadow-yellow-400/20' 
-              : 'bg-transparent border-2 border-transparent'
-          }`}
-        >
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            Workout Photo (Optional)
-          </label>
-          {photoPreview ? (
-            <div className="relative">
-              <img src={photoPreview} alt="Workout preview" className="w-full h-48 object-cover rounded-lg" />
-              <button
-                onClick={() => {
-                  setWorkoutPhoto(null);
-                  setPhotoPreview(null);
-                }}
-                className="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          ) : (
-            <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-600 border-dashed rounded-lg cursor-pointer hover:border-gray-500 transition-colors">
-              <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                <Camera className="w-8 h-8 mb-2 text-gray-400" />
-                <p className="text-sm text-gray-400">Add workout photo</p>
-              </div>
-              <input type="file" className="hidden" accept="image/*" onChange={handlePhotoUpload} />
+        {showPhotoSection && (
+          <div 
+            data-photo-section
+            className={`transition-all duration-500 rounded-lg p-4 ${
+              highlightPhotoSection 
+                ? 'bg-yellow-900/30 border-2 border-yellow-400 shadow-lg shadow-yellow-400/20' 
+                : 'bg-transparent border-2 border-transparent'
+            }`}
+          >
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Workout Photo (Optional)
             </label>
-          )}
-          <p className="text-xs text-gray-500 mt-1">
-            Capture your progress with a mirror selfie or gym photo. Images are automatically compressed to ~50kB.
-          </p>
-        </div>
+            {photoPreview ? (
+              <div className="relative">
+                <img src={photoPreview} alt="Workout preview" className="w-full h-48 object-cover rounded-lg" />
+                <button
+                  onClick={() => {
+                    setWorkoutPhoto(null);
+                    setPhotoPreview(null);
+                  }}
+                  className="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-600 border-dashed rounded-lg cursor-pointer hover:border-gray-500 transition-colors">
+                <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                  <Camera className="w-8 h-8 mb-2 text-gray-400" />
+                  <p className="text-sm text-gray-400">Add workout photo</p>
+                </div>
+                <input type="file" className="hidden" accept="image/*" onChange={handlePhotoUpload} />
+              </label>
+            )}
+            <p className="text-xs text-gray-500 mt-1">
+              Capture your progress with a mirror selfie or gym photo. Images are automatically compressed to ~50kB.
+            </p>
+          </div>
+        )}
 
         {/* Community Sharing Toggle */}
         <div className="bg-dark-800 rounded-lg p-4 border border-dark-700">
@@ -1099,11 +1199,18 @@ export default function WorkoutPage() {
           </div>
         </div>
 
-        {/* Save Button */}
+        {/* Bottom padding to prevent content from being hidden behind sticky button */}
+        <div className="h-20"></div>
+
+
+      </div>
+      
+      {/* Sticky Save Button */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black via-black/95 to-transparent z-40">
         <button
           onClick={handleSaveWorkout}
           disabled={isSaving || !workoutName.trim() || persistentCompletedSets.length === 0}
-          className="w-full py-3 bg-yellow-400 text-black font-semibold rounded-lg hover:bg-yellow-500 disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+          className="w-full py-3 bg-yellow-400 text-black font-semibold rounded-lg hover:bg-yellow-500 disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2 shadow-lg"
         >
           {isSaving ? (
             <>
@@ -1114,8 +1221,6 @@ export default function WorkoutPage() {
             'Save Workout'
           )}
         </button>
-
-
       </div>
     </div>
   );
