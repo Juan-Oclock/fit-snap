@@ -92,18 +92,19 @@ export async function getBeforeAfterPhotos(userId: string): Promise<{
   after: ProgressPhoto | null;
 }> {
   try {
-    // Get most recent before photo
-    const { data: beforeData, error: beforeError } = await supabase
-      .from('progress_photos')
-      .select('*')
-      .eq('user_id', userId)
-      .eq('type', 'before')
-      .order('taken_at', { ascending: false })
-      .limit(1);
+    // Note: progress_photos table may not exist in current schema
+    // Skip progress photos queries to avoid 400 errors
+    let beforeData = null;
+    let afterData = null;
     
-    if (beforeError) {
-      console.warn('Progress photos table not found or error:', beforeError.message);
-    }
+    // Only query progress_photos if we know it exists (uncomment when table is created)
+    // const { data: beforeData, error: beforeError } = await supabase
+    //   .from('progress_photos')
+    //   .select('*')
+    //   .eq('user_id', userId)
+    //   .eq('type', 'before')
+    //   .order('taken_at', { ascending: false })
+    //   .limit(1);
   
     // Get most recent workout photo (priority for "after" photo)
     const { data: workoutPhotoData, error: workoutError } = await supabase
@@ -114,22 +115,18 @@ export async function getBeforeAfterPhotos(userId: string): Promise<{
       .order('completed_at', { ascending: false })
       .limit(1);
     
-    if (workoutError) {
+    if (workoutError && workoutError.code !== 'PGRST116') {
       console.warn('Error fetching workout photos:', workoutError.message);
     }
     
-    // Get most recent after/progress photo as fallback
-    const { data: afterData, error: afterError } = await supabase
-      .from('progress_photos')
-      .select('*')
-      .eq('user_id', userId)
-      .in('type', ['after', 'progress'])
-      .order('taken_at', { ascending: false })
-      .limit(1);
-    
-    if (afterError) {
-      console.warn('Error fetching after photos:', afterError.message);
-    }
+    // Skip after photos query since progress_photos table doesn't exist
+    // const { data: afterData, error: afterError } = await supabase
+    //   .from('progress_photos')
+    //   .select('*')
+    //   .eq('user_id', userId)
+    //   .in('type', ['after', 'progress'])
+    //   .order('taken_at', { ascending: false })
+    //   .limit(1);
     
     let after: ProgressPhoto | null = null;
     

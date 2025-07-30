@@ -35,22 +35,21 @@ export async function checkOnboardingStatus(userId: string): Promise<OnboardingS
       .eq('user_id', userId)
       .limit(1);
 
-    // Check if user has explicitly completed onboarding
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('onboarding_completed')
-      .eq('id', userId)
-      .single();
+    // Determine onboarding completion based on user activity
+    // (No need to query profiles table for onboarding_completed since column doesn't exist)
+    const hasSetGoal = !!goals?.monthly_workout_target;
+    const hasUploadedPhoto = !!photos && photos.length > 0;
+    const hasCompletedWorkout = !!workouts && workouts.length > 0;
     
-    if (profileError && profileError.code !== 'PGRST116') {
-      console.warn('User profiles table error:', profileError.message);
-    }
+    // Consider onboarding completed if user has done at least 2 of the 3 key actions
+    const completedActions = [hasSetGoal, hasUploadedPhoto, hasCompletedWorkout].filter(Boolean).length;
+    const onboardingCompleted = completedActions >= 2;
 
     const status: OnboardingStatus = {
-      has_set_goal: !!goals?.monthly_workout_target,
-      has_uploaded_photo: !!photos && photos.length > 0,
-      has_completed_workout: !!workouts && workouts.length > 0,
-      onboarding_completed: !!profile?.onboarding_completed
+      has_set_goal: hasSetGoal,
+      has_uploaded_photo: hasUploadedPhoto,
+      has_completed_workout: hasCompletedWorkout,
+      onboarding_completed: onboardingCompleted
     };
 
     return status;
@@ -70,27 +69,11 @@ export async function checkOnboardingStatus(userId: string): Promise<OnboardingS
  * Mark onboarding as completed for the user
  */
 export async function completeOnboarding(userId: string): Promise<boolean> {
-  try {
-    const { error } = await supabase
-      .from('profiles')
-      .upsert({
-        id: userId,
-        onboarding_completed: true,
-        updated_at: new Date().toISOString()
-      }, {
-        onConflict: 'id'
-      });
-
-    if (error) {
-      console.error('Error completing onboarding:', error);
-      return false;
-    }
-
-    return true;
-  } catch (error) {
-    console.error('Error completing onboarding:', error);
-    return false;
-  }
+  // Since onboarding completion is now determined by user activity,
+  // we don't need to update any database records.
+  // Just return true to indicate the onboarding flow is complete.
+  console.log('Onboarding marked as completed for user:', userId);
+  return true;
 }
 
 /**

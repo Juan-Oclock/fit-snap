@@ -101,7 +101,6 @@ export type UserProfile = {
   username?: string;
   full_name?: string;
   avatar_url?: string;
-  onboarding_completed?: boolean;
   created_at: string;
   updated_at: string;
 };
