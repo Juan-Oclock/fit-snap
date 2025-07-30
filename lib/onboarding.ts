@@ -36,11 +36,15 @@ export async function checkOnboardingStatus(userId: string): Promise<OnboardingS
       .limit(1);
 
     // Check if user has explicitly completed onboarding
-    const { data: profile } = await supabase
-      .from('user_profiles')
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
       .select('onboarding_completed')
-      .eq('user_id', userId)
+      .eq('id', userId)
       .single();
+    
+    if (profileError && profileError.code !== 'PGRST116') {
+      console.warn('User profiles table error:', profileError.message);
+    }
 
     const status: OnboardingStatus = {
       has_set_goal: !!goals?.monthly_workout_target,
@@ -68,13 +72,13 @@ export async function checkOnboardingStatus(userId: string): Promise<OnboardingS
 export async function completeOnboarding(userId: string): Promise<boolean> {
   try {
     const { error } = await supabase
-      .from('user_profiles')
+      .from('profiles')
       .upsert({
-        user_id: userId,
+        id: userId,
         onboarding_completed: true,
         updated_at: new Date().toISOString()
       }, {
-        onConflict: 'user_id'
+        onConflict: 'id'
       });
 
     if (error) {

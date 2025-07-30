@@ -91,55 +91,75 @@ export async function getBeforeAfterPhotos(userId: string): Promise<{
   before: ProgressPhoto | null;
   after: ProgressPhoto | null;
 }> {
-  // Get most recent before photo
-  const { data: beforeData } = await supabase
-    .from('progress_photos')
-    .select('*')
-    .eq('user_id', userId)
-    .eq('type', 'before')
-    .order('taken_at', { ascending: false })
-    .limit(1);
+  try {
+    // Get most recent before photo
+    const { data: beforeData, error: beforeError } = await supabase
+      .from('progress_photos')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('type', 'before')
+      .order('taken_at', { ascending: false })
+      .limit(1);
+    
+    if (beforeError) {
+      console.warn('Progress photos table not found or error:', beforeError.message);
+    }
   
-  // Get most recent workout photo (priority for "after" photo)
-  const { data: workoutPhotoData } = await supabase
-    .from('workouts')
-    .select('photo_url, completed_at')
-    .eq('user_id', userId)
-    .not('photo_url', 'is', null)
-    .order('completed_at', { ascending: false })
-    .limit(1);
-  
-  // Get most recent after/progress photo as fallback
-  const { data: afterData } = await supabase
-    .from('progress_photos')
-    .select('*')
-    .eq('user_id', userId)
-    .in('type', ['after', 'progress'])
-    .order('taken_at', { ascending: false })
-    .limit(1);
-  
-  let after: ProgressPhoto | null = null;
-  
-  // Always prioritize the most recent workout photo as "after" photo
-  if (workoutPhotoData?.[0]) {
-    // Convert workout photo to progress photo format
-    after = {
-      id: 'workout-photo',
-      user_id: userId,
-      photo_url: workoutPhotoData[0].photo_url,
-      taken_at: workoutPhotoData[0].completed_at,
-      type: 'after' as const,
-      notes: 'Latest workout photo'
+    // Get most recent workout photo (priority for "after" photo)
+    const { data: workoutPhotoData, error: workoutError } = await supabase
+      .from('workouts')
+      .select('photo_url, completed_at')
+      .eq('user_id', userId)
+      .not('photo_url', 'is', null)
+      .order('completed_at', { ascending: false })
+      .limit(1);
+    
+    if (workoutError) {
+      console.warn('Error fetching workout photos:', workoutError.message);
+    }
+    
+    // Get most recent after/progress photo as fallback
+    const { data: afterData, error: afterError } = await supabase
+      .from('progress_photos')
+      .select('*')
+      .eq('user_id', userId)
+      .in('type', ['after', 'progress'])
+      .order('taken_at', { ascending: false })
+      .limit(1);
+    
+    if (afterError) {
+      console.warn('Error fetching after photos:', afterError.message);
+    }
+    
+    let after: ProgressPhoto | null = null;
+    
+    // Always prioritize the most recent workout photo as "after" photo
+    if (workoutPhotoData?.[0]) {
+      // Convert workout photo to progress photo format
+      after = {
+        id: 'workout-photo',
+        user_id: userId,
+        photo_url: workoutPhotoData[0].photo_url,
+        taken_at: workoutPhotoData[0].completed_at,
+        type: 'after' as const,
+        notes: 'Latest workout photo'
+      };
+    } else if (afterData?.[0]) {
+      // Fallback to dedicated progress photos if no workout photos exist
+      after = afterData[0];
+    }
+    
+    return {
+      before: beforeData?.[0] || null,
+      after
     };
-  } else if (afterData?.[0]) {
-    // Fallback to dedicated progress photos if no workout photos exist
-    after = afterData[0];
+  } catch (error) {
+    console.error('Error in getBeforeAfterPhotos:', error);
+    return {
+      before: null,
+      after: null
+    };
   }
-  
-  return {
-    before: beforeData?.[0] || null,
-    after
-  };
 }
 
 // Get personal records calculated from actual workout history

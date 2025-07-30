@@ -22,7 +22,7 @@ import {
 } from '@/lib/dashboard';
 import { getUserProfile } from '@/lib/settings';
 import { checkOnboardingStatus, completeOnboarding, shouldShowOnboarding, OnboardingStatus } from '@/lib/onboarding';
-import { Workout, WorkoutWithExercises, UserProfile } from '@/types';
+import { Workout, WorkoutWithExercises, UserProfile, UserGoals } from '@/types';
 
 interface PersonalRecord {
   exercise_name: string;
@@ -99,6 +99,7 @@ export default function DashboardPage() {
         console.log('🚀 Starting dashboard data fetch for user:', user.id);
         console.log('🆔 Actual user ID:', user.id, 'Type:', typeof user.id);
         
+        // Fetch dashboard data with individual error handling
         const [
           goal,
           workoutCount,
@@ -108,7 +109,7 @@ export default function DashboardPage() {
           goalExists,
           profile,
           onboardingStatusData
-        ] = await Promise.all([
+        ] = await Promise.allSettled([
           getUserGoal(user.id),
           getMonthlyWorkoutCount(user.id),
           getWorkoutDays(user.id),
@@ -117,7 +118,34 @@ export default function DashboardPage() {
           hasUserSetGoal(user.id),
           getUserProfile(user.id),
           checkOnboardingStatus(user.id)
-        ]);
+        ]).then(results => results.map((result, index) => {
+          if (result.status === 'rejected') {
+            const functionNames = [
+              'getUserGoal', 'getMonthlyWorkoutCount', 'getWorkoutDays', 
+              'getPersonalRecords', 'getRecentWorkouts', 'hasUserSetGoal',
+              'getUserProfile', 'checkOnboardingStatus'
+            ];
+            console.warn(`Dashboard API ${functionNames[index]} failed:`, result.reason);
+            // Return safe defaults for each function
+            switch (index) {
+              case 0: return null; // getUserGoal
+              case 1: return 0; // getMonthlyWorkoutCount
+              case 2: return []; // getWorkoutDays
+              case 3: return []; // getPersonalRecords
+              case 4: return []; // getRecentWorkouts
+              case 5: return false; // hasUserSetGoal
+              case 6: return null; // getUserProfile
+              case 7: return { // checkOnboardingStatus
+                has_set_goal: false,
+                has_uploaded_photo: false,
+                has_completed_workout: false,
+                onboarding_completed: false
+              };
+              default: return null;
+            }
+          }
+          return result.value;
+        }));
         
         // console.log('📊 Dashboard data fetched:', {
         //   goal,
@@ -130,18 +158,18 @@ export default function DashboardPage() {
         //   profile: !!profile
         // });
         
-        setMonthlyGoal(goal);
-        setMonthlyWorkouts(workoutCount);
-        setWorkoutDays(workoutDaysData);
-        setPersonalRecords(prs);
-        setRecentWorkouts(workouts);
+        setMonthlyGoal((goal as UserGoals | null)?.monthly_workout_target || 12);
+        setMonthlyWorkouts(workoutCount as number);
+        setWorkoutDays(workoutDaysData as number[]);
+        setPersonalRecords(prs as PersonalRecord[]);
+        setRecentWorkouts(workouts as WorkoutWithExercises[]);
 
-        setHasGoal(goalExists);
-        setUserProfile(profile);
+        setHasGoal(goalExists as boolean);
+        setUserProfile(profile as UserProfile | null);
         
         // Check if onboarding should be shown
-        setOnboardingStatus(onboardingStatusData);
-        setShowOnboarding(shouldShowOnboarding(onboardingStatusData));
+        setOnboardingStatus(onboardingStatusData as OnboardingStatus);
+        setShowOnboarding(shouldShowOnboarding(onboardingStatusData as OnboardingStatus));
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       } finally {
