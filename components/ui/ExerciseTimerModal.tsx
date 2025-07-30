@@ -61,8 +61,8 @@ export default function ExerciseTimerModal({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-black bg-opacity-95 ${isClosing ? 'animate-slide-out-down' : 'animate-slide-in-up'} pt-10 pb-10`}
-      style={{ minHeight: "100vh", minWidth: "100vw" }}
+      className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-black bg-opacity-95 ${isClosing ? 'animate-slide-out-down' : 'animate-slide-in-up'}`}
+      style={{ height: "100vh", width: "100vw", top: 0, left: 0 }}
     >
       {/* Exercise Info */}
       <div className="text-center mb-12">
@@ -114,7 +114,7 @@ export default function ExerciseTimerModal({
       </div>
 
       {/* Action Buttons */}
-      <div className="flex items-center justify-center w-full mt-8 gap-4 px-8">
+      <div className="flex items-center justify-center w-full mt-4 gap-4 px-8">
         <button
           className="px-8 py-3 border border-gray-500 bg-transparent text-white font-medium rounded transition-colors hover:border-gray-400"
           onClick={onRest}
